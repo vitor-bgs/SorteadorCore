@@ -1,0 +1,35 @@
+﻿@model SorteadorFolgados.ViewModel.ResetSorteio
+
+@{
+    ViewData["Title"] = "Resetar";
+}
+
+<h2>Resetar Sorteio</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Resetar">
+            <div class="form-group">
+                <label asp-for="Nome" class="control-label">Nome do Sorteio</label>
+                <input asp-for="Nome" class="form-control" />
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Senha" class="control-label">Senha</label>
+                <input asp-for="Senha" class="form-control" />
+                <span asp-validation-for="Senha" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Resetar" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Voltar ao Sorteio</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

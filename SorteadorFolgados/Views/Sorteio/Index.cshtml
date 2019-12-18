@@ -1,0 +1,52 @@
+﻿@model SorteadorFolgados.Domain.Entities.Sorteio
+
+@{
+    ViewData["Title"] = "Sorteador";
+}
+
+<h2>Sorteador Folgados</h2>
+<h4>@Model.Nome (@Model.Data)</h4>
+
+
+
+<partial name="_Sortear" model="new SorteadorFolgados.ViewModel.ResetSorteio()" />
+
+<p>
+    <a asp-action="Index">Atualizar Resultados</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Pontos
+            </th>
+            <th>
+                Nome
+            </th>
+            <th>
+                IP
+            </th>
+            <th>
+                Data e Hora
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Participantes.OrderByDescending(p => p.Pontos)) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Pontos)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EnderecoIP)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Data)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
