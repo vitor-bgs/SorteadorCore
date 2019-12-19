@@ -6,13 +6,16 @@ namespace SorteadorFolgados.Domain.Entities
 {
     public class Sorteio
     {
-        public Sorteio()
-        {
-            Participantes = new List<Participante>();
-        }
         public int SorteioId { get; set; }
-        public string Nome { get; set; }
-        public DateTime Data { get; set; }
-        public List<Participante> Participantes { get; set; }
+        public Sala Sala { get; set; }
+        public DateTime DataInicio { get; set; }
+        public List<SorteioDetalhe> Participacoes { get; set; }
+
+        public Sorteio(Sala sala)
+        {
+            Sala = sala;
+            DataInicio = DateTime.Now;
+            Participacoes = new List<SorteioDetalhe>();
+        }
     }
 }

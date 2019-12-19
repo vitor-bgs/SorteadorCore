@@ -6,10 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SorteadorFolgados.Domain\SorteadorFolgados.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="EntityConfig\" />
+    <ProjectReference Include="..\SorteadorFolgados.Infra\SorteadorFolgados.Infra.csproj" />
   </ItemGroup>
 
 </Project>

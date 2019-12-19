@@ -1,0 +1,44 @@
+﻿@model SorteadorFolgados.ViewModel.SalaViewModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>SalaViewModel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.SalaId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SalaId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Nome)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Nome)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.QuantidadeVencedoresMaioresPontos)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.QuantidadeVencedoresMaioresPontos)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.QuantidadeVencedoresMenoresPontos)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.QuantidadeVencedoresMenoresPontos)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

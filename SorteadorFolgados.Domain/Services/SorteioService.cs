@@ -1,33 +1,23 @@
 ﻿using SorteadorFolgados.Domain.Entities;
-using SorteadorFolgados.Domain.Interfaces;
+using SorteadorFolgados.Domain.Interfaces.Repository;
+using SorteadorFolgados.Domain.Interfaces.Services;
 using System;
 
 namespace SorteadorFolgados.Domain.Services
 {
-    public class SorteioService
+    public class SorteioService : ServiceBase<Sorteio>, ISorteioService
     {
-        ISorteioRepository _SorteioRepository;
-        public SorteioService(ISorteioRepository _sorteioRepository)
+        ISorteioRepository _sorteioRepository;
+        public SorteioService(ISorteioRepository sorteioRepository)
+            :base(sorteioRepository)
         {
-            _SorteioRepository = _sorteioRepository;
-        }
-
-        public Sorteio AdicionarSorteio(string nomeSorteio)
-        {
-            var sorteio = new Sorteio() { Nome = nomeSorteio, Data = DateTime.Now };
-            return _SorteioRepository.AdicionarSorteio(sorteio);
-        }
-
-        public Participante SortearParticipante(string nomeParticipante, string enderecoIP, int sorteioId)
-        {
-            int numeroSorteado = new Random().Next(0, 1000);
-            var participante = new Participante { Nome = nomeParticipante, Pontos = numeroSorteado, Data = DateTime.Now, EnderecoIP = enderecoIP };
-            return _SorteioRepository.SortearParticipante(participante, sorteioId);
+            _sorteioRepository = sorteioRepository;
         }
 
         public Sorteio ObterSorteioAtual()
         {
-            return _SorteioRepository.ObterSorteioAtual();
+            return _sorteioRepository.ObterSorteioAtual();
         }
+
     }
 }

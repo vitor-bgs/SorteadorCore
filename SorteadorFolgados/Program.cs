@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
+using AutoMapper;
+using SorteadorFolgados.AutoMapper;
 
 namespace SorteadorFolgados
 {
@@ -56,6 +58,16 @@ namespace SorteadorFolgados
                             });
                         services.AddSingleton<ILoggerProvider>(sp => GoogleLoggerProvider.Create(GcpProjectId));
                     }
+
+                    var mappingConfig = new MapperConfiguration(mc => 
+                    {
+                        mc.AddProfile(new DomainToViewProfile());
+                        mc.AddProfile(new ViewToDomainProfile());
+                    });
+
+                    IMapper mapper = mappingConfig.CreateMapper();
+                    services.AddSingleton(mapper);
+                    services.AddMvc();
                 })
                 .ConfigureLogging(loggingBuilder =>
                 {

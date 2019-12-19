@@ -1,15 +1,13 @@
-﻿@model SorteadorFolgados.Domain.Entities.Sorteio
+﻿@model SorteadorFolgados.ViewModel.SorteioViewModel
 
 @{
-    ViewData["Title"] = "Sorteador";
+    ViewData["Title"] = "Sorteador Folgados";
 }
 
-<h2>Sorteador Folgados</h2>
-<h4>@Model.Nome (@Model.Data)</h4>
+<h2>Sorteio - @Model.Sala.Nome (@Model.DataInicio.ToString())</h2>
 
-
-
-<partial name="_Sortear" model="new SorteadorFolgados.ViewModel.ResetSorteio()" />
+<hr />
+<partial name="_Sortear" model="new SorteadorFolgados.ViewModel.ParticipanteViewModel()" />
 
 <p>
     <a asp-action="Index">Atualizar Resultados</a>
@@ -17,36 +15,29 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                Pontos
-            </th>
-            <th>
-                Nome
-            </th>
-            <th>
-                IP
-            </th>
-            <th>
-                Data e Hora
-            </th>
+            <th>Pontos</th>
+            <th>Nome</th>
+            <th>IP</th>
+            <th>Data e Hora</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Participantes.OrderByDescending(p => p.Pontos)) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Pontos)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EnderecoIP)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Data)
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Participacoes)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Pontos)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Participante.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EnderecoIP)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DataParticipacao)
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
