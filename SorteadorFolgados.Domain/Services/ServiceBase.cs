@@ -23,9 +23,9 @@ namespace SorteadorFolgados.Domain.Services
             _repository.Dispose();
         }
 
-        public TEntity Get(int entity)
+        public TEntity Get(int entityId)
         {
-            return _repository.Get(entity);
+            return _repository.Get(entityId);
         }
 
         public List<TEntity> GetAll()

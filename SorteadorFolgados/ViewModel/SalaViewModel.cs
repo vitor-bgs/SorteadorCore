@@ -26,5 +26,7 @@ namespace SorteadorFolgados.ViewModel
         [Required(ErrorMessage = "Preencha o campo Vencedores (Menores pontos)")]
         [Range(0, int.MaxValue, ErrorMessage = "Preencha com um valor maior ou igual a zero")]
         public int QuantidadeVencedoresMenoresPontos { get; set; }
+
+        public bool EstaNoSorteioAtual { get; set; }
     }
 }

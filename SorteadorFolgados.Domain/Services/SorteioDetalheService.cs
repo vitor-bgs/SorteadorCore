@@ -2,6 +2,7 @@
 using SorteadorFolgados.Domain.Interfaces.Repository;
 using SorteadorFolgados.Domain.Interfaces.Services;
 using System;
+using System.Collections.Generic;
 
 namespace SorteadorFolgados.Domain.Services
 {
@@ -20,6 +21,11 @@ namespace SorteadorFolgados.Domain.Services
             sorteioDetalhe.Pontos = new Random().Next(0, 1000);
             sorteioDetalhe.DataParticipacao = DateTime.Now;
             return base.Add(sorteioDetalhe);
+        }
+
+        public List<SorteioDetalhe> GetSorteioDetalhes(int sorteioId)
+        {
+            return _sorteioDetalhesRepository.GetSorteioDetalhes(sorteioId);
         }
     }
 }

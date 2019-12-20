@@ -13,5 +13,16 @@ namespace SorteadorFolgados.Infra.Repositories
         {
             return BancoDadosFake<Participante>.Lista.FirstOrDefault(p => p.Nome == nomeParticipante);
         }
+
+        public override Participante Add(Participante entity)
+        {
+            entity.ParticipanteId = BancoDadosFake<Participante>.Lista.Count + 1;
+            return base.Add(entity);
+        }
+
+        public override Participante Get(int entity)
+        {
+            return BancoDadosFake<Participante>.Lista.FirstOrDefault(p => p.ParticipanteId == entity);
+        }
     }
 }

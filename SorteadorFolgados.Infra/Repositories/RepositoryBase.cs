@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SorteadorFolgados.Domain.Interfaces.Repository;
 using SorteadorFolgados.Infra.Context;
 
@@ -6,7 +7,7 @@ namespace SorteadorFolgados.Infra.Repositories
 {
     public class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : class
     {
-        public TEntity Add(TEntity entity)
+        public virtual TEntity Add(TEntity entity)
         {
             BancoDadosFake<TEntity>.Lista.Add(entity);
             return entity;
@@ -16,24 +17,24 @@ namespace SorteadorFolgados.Infra.Repositories
         {
         }
 
-        public TEntity Get(int entity)
+        public virtual TEntity Get(int entityId)
         {
-            return BancoDadosFake<TEntity>.Lista[entity];
+            throw new Exception("Not Implemented");
         }
 
-        public List<TEntity> GetAll()
+        public virtual List<TEntity> GetAll()
         {
             return BancoDadosFake<TEntity>.Lista;
         }
 
-        public void Remove(TEntity entity)
+        public virtual void Remove(TEntity entity)
         {
             BancoDadosFake<TEntity>.Lista.Remove(entity);
         }
 
-        public void Update(TEntity entity)
+        public virtual void Update(TEntity entity)
         {
-
+            throw new Exception("Not Implemented");
         }
     }
 }

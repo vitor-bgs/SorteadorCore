@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SorteadorFolgados.Domain.Entities;
+using SorteadorFolgados.Domain.Interfaces.Services;
 using SorteadorFolgados.Domain.Services;
 using SorteadorFolgados.Infra.Repositories;
 using SorteadorFolgados.ViewModel;
@@ -15,24 +16,29 @@ namespace SorteadorFolgados.Controllers
     public class SalaController : Controller
     {
         private readonly IMapper _mapper;
+        private readonly ISalaService _salaService;
+        private readonly ISorteioService _sorteioService;
 
         public SalaController(IMapper mapper)
         {
             _mapper = mapper;
+            _salaService = new SalaService(new SalaRepository());
+            _sorteioService = new SorteioService(new SorteioRepository());
         }
 
         // GET: Sala
         public ActionResult Index()
         {
-            var salaService = new SalaService(new SalaRepository());
-            var salas = salaService.GetAll().Select(s => _mapper.Map<Sala, SalaViewModel>(s));
-            return View(salas);
+            var salas = _salaService.GetAll().Select(s => _mapper.Map<Sala, SalaViewModel>(s));
+            var sorteio = _sorteioService.ObterSorteioAtual();
+            return View(salas.Select(s => { s.EstaNoSorteioAtual = s.SalaId == sorteio.SalaId; return s; }).OrderBy(s => s.SalaId));
         }
 
         // GET: Sala/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var salas = _mapper.Map<Sala, SalaViewModel>(_salaService.Get(id));
+            return View(salas);
         }
 
         // GET: Sala/Create
@@ -49,8 +55,7 @@ namespace SorteadorFolgados.Controllers
             try
             {
                 var salaDomain = _mapper.Map<SalaViewModel, Sala>(sala);
-                var salaService = new SalaService(new SalaRepository());
-                salaService.Add(salaDomain);
+                _salaService.Add(salaDomain);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -64,18 +69,18 @@ namespace SorteadorFolgados.Controllers
         // GET: Sala/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var salas = _mapper.Map<Sala, SalaViewModel>(_salaService.Get(id));
+            return View(salas);
         }
 
         // POST: Sala/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, SalaViewModel sala)
         {
             try
             {
-                // TODO: Add update logic here
-
+                _salaService.Update(_mapper.Map<SalaViewModel, Sala>(sala));
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -87,24 +92,33 @@ namespace SorteadorFolgados.Controllers
         // GET: Sala/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var salas = _mapper.Map<Sala, SalaViewModel>(_salaService.Get(id));
+            return View(salas);
         }
 
         // POST: Sala/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, SalaViewModel sala)
         {
             try
             {
-                // TODO: Add delete logic here
-
+                sala.SalaId = id;
+                _salaService.Remove(_mapper.Map<SalaViewModel, Sala>(sala));
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
                 return View();
             }
+        }
+
+
+        public ActionResult IniciarSorteio(int SalaId)
+        {
+            var sala = _salaService.Get(SalaId);
+            _sorteioService.Add(new Sorteio(sala));
+            return RedirectToAction(nameof(Index));
         }
     }
 }

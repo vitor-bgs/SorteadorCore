@@ -29,7 +29,8 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
+        <tr @{ if (item.EstaNoSorteioAtual) { Html.Display("class='SorteioAtual'"); }
+            }>
             <td>
                 @Html.DisplayFor(modelItem => item.SalaId)
             </td>
@@ -43,8 +44,10 @@
                 @Html.DisplayFor(modelItem => item.QuantidadeVencedoresMenoresPontos)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new {  id=item.SalaId  }) |
-                @Html.ActionLink("Delete", "Delete", new {  id=item.SalaId  })
+
+                @Html.ActionLink("Iniciar Sorteio", "IniciarSorteio", new { salaId = item.SalaId }) |
+                @Html.ActionLink("Edit", "Edit", new { id = item.SalaId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.SalaId })
             </td>
         </tr>
 }

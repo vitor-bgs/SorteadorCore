@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SorteadorFolgados.Domain.Entities;
+using SorteadorFolgados.Domain.Interfaces.Services;
 using SorteadorFolgados.Domain.Services;
 using SorteadorFolgados.Infra.Repositories;
 using SorteadorFolgados.ViewModel;
@@ -14,20 +15,22 @@ namespace SorteadorFolgados.Controllers
     public class SorteioController : Controller
     {
         private readonly IMapper _mapper;
+        private readonly ISorteioService _sorteioService;
+        private readonly ISorteioDetalheService _sorteioDetalheService;
 
         public SorteioController(IMapper mapper)
         {
             _mapper = mapper;
+            _sorteioService = new SorteioService(new SorteioRepository());
+            _sorteioDetalheService = new SorteioDetalheService(new SorteioDetalheRepository());
         }
 
         public IActionResult Index()
         {
-            SorteioService sorteioService = new SorteioService(new SorteioRepository());
-            SorteioDetalheService sorteioDetalheService = new SorteioDetalheService(new SorteioDetalheRepository());
 
-            var sorteio = sorteioService.ObterSorteioAtual();
-            sorteio.Participacoes = sorteioDetalheService.GetAll().OrderByDescending(p => p.Pontos).ToList();
-            return View(_mapper.Map<Sorteio,SorteioViewModel>(sorteio));
+            var sorteioAtual = _sorteioService.ObterSorteioAtual();
+            sorteioAtual.Participacoes = _sorteioDetalheService.GetSorteioDetalhes(sorteioAtual.SorteioId).OrderByDescending(p => p.Pontos).ToList();
+            return View(_mapper.Map<Sorteio,SorteioViewModel>(sorteioAtual));
         }
 
         public IActionResult Reset()
@@ -39,14 +42,13 @@ namespace SorteadorFolgados.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Sortear(string nome)
         {
-            SorteioService sorteioService = new SorteioService(new SorteioRepository());
-            if (sorteioService.ObterSorteioAtual().Participacoes.Any(p => p.Participante.Nome == nome))
+            if (_sorteioService.ObterSorteioAtual().Participacoes.Any(p => p.Participante.Nome == nome))
             {
                 return RedirectToAction("Index");
             }
 
-            string enderecoIP = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            new SorteioDetalheService(new SorteioDetalheRepository()).Add(new SorteioDetalhe() { Participante = new Participante() { Nome = nome } });
+            string enderecoIP = Request.HttpContext.Connection.RemoteIpAddress.AddressFamily.ToString();
+            new SorteioDetalheService(new SorteioDetalheRepository()).Add(new SorteioDetalhe() { SorteioId = _sorteioService.ObterSorteioAtual().SorteioId, EnderecoIP = enderecoIP, Participante = new Participante() { Nome = nome } });
             return RedirectToAction("Index");
         }
 
@@ -58,5 +60,6 @@ namespace SorteadorFolgados.Controllers
                 ViewData = ViewData
             };
         }
+
     }
 }

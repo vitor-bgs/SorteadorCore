@@ -2,7 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <GoogleCloudPublishChoice>Gae</GoogleCloudPublishChoice>
-    <GoogleCloudPublishConfiguration>Debug</GoogleCloudPublishConfiguration>
+    <GoogleCloudPublishConfiguration>Release</GoogleCloudPublishConfiguration>
     <GoogleAppEnginePublishPromote>True</GoogleAppEnginePublishPromote>
     <GoogleAppEnginePublishOpenWebsite>True</GoogleAppEnginePublishOpenWebsite>
     <GoogleKubernetesEnginePublishDeploymentName>sorteador-folgados</GoogleKubernetesEnginePublishDeploymentName>
@@ -21,5 +21,6 @@
     <WebStackScaffolding_LayoutPageFile>
     </WebStackScaffolding_LayoutPageFile>
     <WebStackScaffolding_IsAsyncSelected>False</WebStackScaffolding_IsAsyncSelected>
+    <GoogleAppEnginePublishNextVersion>2</GoogleAppEnginePublishNextVersion>
   </PropertyGroup>
 </Project>

@@ -20,5 +20,16 @@ namespace SorteadorFolgados.Infra.Repositories
 
             return BancoDadosFake<Sorteio>.Lista.Last();
         }
+
+        public override Sorteio Add(Sorteio entity)
+        {
+            entity.SorteioId = BancoDadosFake<Sorteio>.Lista.Count + 1;
+            return base.Add(entity);
+        }
+
+        public override Sorteio Get(int entity)
+        {
+            return BancoDadosFake<Sorteio>.Lista.FirstOrDefault(p => p.SorteioId == entity);
+        }
     }
 }
