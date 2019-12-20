@@ -47,7 +47,7 @@ namespace SorteadorFolgados.Controllers
                 return RedirectToAction("Index");
             }
 
-            string enderecoIP = Request.HttpContext.Connection.RemoteIpAddress.AddressFamily.ToString();
+            string enderecoIP = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             new SorteioDetalheService(new SorteioDetalheRepository()).Add(new SorteioDetalhe() { SorteioId = _sorteioService.ObterSorteioAtual().SorteioId, EnderecoIP = enderecoIP, Participante = new Participante() { Nome = nome } });
             return RedirectToAction("Index");
         }

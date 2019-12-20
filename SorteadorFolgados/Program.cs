@@ -10,6 +10,7 @@ using System;
 using System.IO;
 using AutoMapper;
 using SorteadorFolgados.AutoMapper;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace SorteadorFolgados
 {
@@ -120,6 +121,12 @@ namespace SorteadorFolgados
                     {
                         app.UseExceptionHandler("/Home/Error");
                     }
+
+                    app.UseForwardedHeaders(new ForwardedHeadersOptions
+                    {
+                        ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                        ForwardedHeaders.XForwardedProto
+                    });
 
                     app.UseStaticFiles();
 
