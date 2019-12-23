@@ -1,40 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using SorteadorFolgados.Domain.Interfaces.Repository;
 using SorteadorFolgados.Infra.Context;
 
 namespace SorteadorFolgados.Infra.Repositories
 {
-    public class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : class
+    public class RepositoryBase<TEntity, TContext> : IRepositoryBase<TEntity> where TEntity : class where TContext : DbContext
     {
-        public virtual TEntity Add(TEntity entity)
+        protected DbSet<TEntity> DbSet;
+        protected readonly TContext Db;
+        
+        public RepositoryBase(TContext db){
+            Db = db;
+            DbSet = Db.Set<TEntity>();
+        }
+
+        public TEntity Add(TEntity obj)
         {
-            BancoDadosFake<TEntity>.Lista.Add(entity);
-            return entity;
+            var obji = DbSet.Add(obj);
+            Db.SaveChanges();
+            return obji.Entity;
         }
 
         public void Dispose()
         {
+            //throw new NotImplementedException();
         }
 
-        public virtual TEntity Get(int entityId)
+        public virtual TEntity Get(int id)
         {
-            throw new Exception("Not Implemented");
+            return DbSet.Find(id);
         }
 
         public virtual List<TEntity> GetAll()
         {
-            return BancoDadosFake<TEntity>.Lista;
+            return DbSet.ToList();
         }
 
-        public virtual void Remove(TEntity entity)
+        public virtual void Remove(TEntity obj)
         {
-            BancoDadosFake<TEntity>.Lista.Remove(entity);
+            DbSet.Remove(obj);
+            Db.SaveChanges();
+            
         }
 
-        public virtual void Update(TEntity entity)
+        public virtual void Update(TEntity obj)
         {
-            throw new Exception("Not Implemented");
+            Db.Entry(obj).State = EntityState.Modified;
+            Db.SaveChanges();
         }
     }
 }

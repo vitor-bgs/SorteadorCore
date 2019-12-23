@@ -31,6 +31,11 @@ namespace SorteadorFolgados.Controllers
         {
             var salas = _salaService.GetAll().Select(s => _mapper.Map<Sala, SalaViewModel>(s));
             var sorteio = _sorteioService.ObterSorteioAtual();
+            if(sorteio == null)
+            {
+                return View(salas.OrderBy(s => s.SalaId));
+            }
+
             return View(salas.Select(s => { s.EstaNoSorteioAtual = s.SalaId == sorteio.SalaId; return s; }).OrderBy(s => s.SalaId));
         }
 
@@ -117,7 +122,7 @@ namespace SorteadorFolgados.Controllers
         public ActionResult IniciarSorteio(int SalaId)
         {
             var sala = _salaService.Get(SalaId);
-            _sorteioService.Add(new Sorteio(sala));
+            _sorteioService.IniciarNovoSorteio(sala);
             return RedirectToAction(nameof(Index));
         }
     }

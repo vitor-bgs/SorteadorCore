@@ -15,6 +15,8 @@ using SorteadorFolgados.Domain.Interfaces.Services;
 using SorteadorFolgados.Domain.Services;
 using SorteadorFolgados.Infra.Repositories;
 using SorteadorFolgados.Domain.Interfaces.Repository;
+using SorteadorFolgados.Infra.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace SorteadorFolgados
 {
@@ -63,6 +65,11 @@ namespace SorteadorFolgados
                             });
                         services.AddSingleton<ILoggerProvider>(sp => GoogleLoggerProvider.Create(GcpProjectId));
                     }
+
+                    services.AddEntityFrameworkNpgsql().AddDbContext<BancoContexto>(options =>
+                    {
+                        options.UseNpgsql(Configuration.GetConnectionString("BancoSorteadorString"));
+                    });
 
                     var mappingConfig = new MapperConfiguration(mc => 
                     {

@@ -7,22 +7,15 @@ using System.Text;
 
 namespace SorteadorFolgados.Infra.Repositories
 {
-    public class ParticipanteRepository : RepositoryBase<Participante>, IParticipanteRepository
+    public class ParticipanteRepository : RepositoryBase<Participante, BancoContexto>, IParticipanteRepository
     {
+        public ParticipanteRepository(BancoContexto db) : base(db)
+        {
+        }
+
         public Participante BuscaPorNome(string nomeParticipante)
         {
-            return BancoDadosFake<Participante>.Lista.FirstOrDefault(p => p.Nome == nomeParticipante);
-        }
-
-        public override Participante Add(Participante entity)
-        {
-            entity.ParticipanteId = BancoDadosFake<Participante>.Lista.Count + 1;
-            return base.Add(entity);
-        }
-
-        public override Participante Get(int entity)
-        {
-            return BancoDadosFake<Participante>.Lista.FirstOrDefault(p => p.ParticipanteId == entity);
+            return Db.Participantes.FirstOrDefault(p => p.Nome == nomeParticipante);
         }
     }
 }

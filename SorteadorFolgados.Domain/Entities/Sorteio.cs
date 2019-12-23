@@ -10,14 +10,12 @@ namespace SorteadorFolgados.Domain.Entities
         public int SalaId { get; set; }
         public Sala Sala { get; set; }
         public DateTime DataInicio { get; set; }
+        public DateTime DataEncerramento { get; set; }
+        public bool Ativo { get; set; }
         public List<SorteioDetalhe> Participacoes { get; set; }
 
-        public Sorteio(Sala sala)
+        public Sorteio()
         {
-            SalaId = sala.SalaId;
-            Sala = sala;
-            DataInicio = DateTime.Now;
-            Participacoes = new List<SorteioDetalhe>();
         }
     }
 }

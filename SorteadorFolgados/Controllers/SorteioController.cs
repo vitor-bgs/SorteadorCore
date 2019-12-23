@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SorteadorFolgados.Domain.Entities;
 using SorteadorFolgados.Domain.Interfaces.Services;
-using SorteadorFolgados.Domain.Services;
-using SorteadorFolgados.Infra.Repositories;
 using SorteadorFolgados.ViewModel;
 
 namespace SorteadorFolgados.Controllers
@@ -29,7 +24,6 @@ namespace SorteadorFolgados.Controllers
         {
 
             var sorteioAtual = _sorteioService.ObterSorteioAtual();
-            sorteioAtual.Participacoes = _sorteioDetalheService.GetSorteioDetalhes(sorteioAtual.SorteioId).OrderByDescending(p => p.Pontos).ToList();
             return View(_mapper.Map<Sorteio,SorteioViewModel>(sorteioAtual));
         }
 
@@ -48,7 +42,8 @@ namespace SorteadorFolgados.Controllers
             }
 
             string enderecoIP = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            new SorteioDetalheService(new SorteioDetalheRepository()).Add(new SorteioDetalhe() { SorteioId = _sorteioService.ObterSorteioAtual().SorteioId, EnderecoIP = enderecoIP, Participante = new Participante() { Nome = nome } });
+            var participacao = new SorteioDetalhe() { SorteioId = _sorteioService.ObterSorteioAtual().SorteioId, EnderecoIP = enderecoIP, Participante = new Participante() { Nome = nome } };
+            _sorteioDetalheService.Add(participacao);
             return RedirectToAction("Index");
         }
 

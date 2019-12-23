@@ -1,28 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using SorteadorFolgados.Domain.Entities;
 using SorteadorFolgados.Domain.Interfaces.Repository;
 using SorteadorFolgados.Infra.Context;
 
 namespace SorteadorFolgados.Infra.Repositories
 {
-    public class SorteioDetalheRepository : RepositoryBase<SorteioDetalhe>, ISorteioDetalheRepository
+    public class SorteioDetalheRepository : RepositoryBase<SorteioDetalhe, BancoContexto>, ISorteioDetalheRepository
     {
+        public SorteioDetalheRepository(BancoContexto db) : base(db)
+        {
+        }
+
         public List<SorteioDetalhe> GetSorteioDetalhes(int sorteioId)
         {
-            return BancoDadosFake<SorteioDetalhe>.Lista.Where(s => s.SorteioId == sorteioId).ToList();
-        }
-
-
-        public override SorteioDetalhe Add(SorteioDetalhe entity)
-        {
-            entity.SorteioDetalheId = BancoDadosFake<SorteioDetalhe>.Lista.Count + 1;
-            return base.Add(entity);
-        }
-
-        public override SorteioDetalhe Get(int entity)
-        {
-            return BancoDadosFake<SorteioDetalhe>.Lista.FirstOrDefault(p => p.SorteioDetalheId == entity);
+            return Db.SorteioDetalhes.Include(s => s.Participante).Where(s => s.SorteioId == sorteioId).ToList();
         }
     }
 }
