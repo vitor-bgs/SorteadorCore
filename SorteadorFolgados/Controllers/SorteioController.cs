@@ -18,11 +18,11 @@ namespace SorteadorFolgados.Controllers
         private readonly ISorteioService _sorteioService;
         private readonly ISorteioDetalheService _sorteioDetalheService;
 
-        public SorteioController(IMapper mapper)
+        public SorteioController(IMapper mapper, ISorteioService sorteioService, ISorteioDetalheService sorteioDetalheService)
         {
             _mapper = mapper;
-            _sorteioService = new SorteioService(new SorteioRepository());
-            _sorteioDetalheService = new SorteioDetalheService(new SorteioDetalheRepository());
+            _sorteioService = sorteioService;
+            _sorteioDetalheService = sorteioDetalheService;
         }
 
         public IActionResult Index()

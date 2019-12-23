@@ -11,6 +11,10 @@ using System.IO;
 using AutoMapper;
 using SorteadorFolgados.AutoMapper;
 using Microsoft.AspNetCore.HttpOverrides;
+using SorteadorFolgados.Domain.Interfaces.Services;
+using SorteadorFolgados.Domain.Services;
+using SorteadorFolgados.Infra.Repositories;
+using SorteadorFolgados.Domain.Interfaces.Repository;
 
 namespace SorteadorFolgados
 {
@@ -68,6 +72,12 @@ namespace SorteadorFolgados
 
                     IMapper mapper = mappingConfig.CreateMapper();
                     services.AddSingleton(mapper);
+                    services.AddTransient<ISorteioService, SorteioService>();
+                    services.AddTransient<ISorteioDetalheService, SorteioDetalheService>();
+                    services.AddTransient<ISorteioRepository, SorteioRepository>();
+                    services.AddTransient<ISorteioDetalheRepository, SorteioDetalheRepository>();
+                    services.AddTransient<ISalaService, SalaService>();
+                    services.AddTransient<ISalaRepository, SalaRepository>();
                     services.AddMvc();
                 })
                 .ConfigureLogging(loggingBuilder =>

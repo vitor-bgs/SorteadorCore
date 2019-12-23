@@ -19,11 +19,11 @@ namespace SorteadorFolgados.Controllers
         private readonly ISalaService _salaService;
         private readonly ISorteioService _sorteioService;
 
-        public SalaController(IMapper mapper)
+        public SalaController(IMapper mapper, ISalaService salaService, ISorteioService sorteioService)
         {
             _mapper = mapper;
-            _salaService = new SalaService(new SalaRepository());
-            _sorteioService = new SorteioService(new SorteioRepository());
+            _salaService = salaService;
+            _sorteioService = sorteioService;
         }
 
         // GET: Sala
