@@ -5,10 +5,10 @@ namespace SorteadorFolgados.Domain.Interfaces.Services
 {
     public interface IServiceBase<TEntity> : IDisposable where TEntity : class
     {
-        TEntity Add(TEntity entity);
-        void Remove(TEntity entity);
-        void Update(TEntity entity);
-        TEntity Get(int entity);
+        TEntity Add(TEntity obj);
+        void Remove(TEntity obj);
+        void Update(TEntity obj);
+        TEntity Get(int entityId);
         List<TEntity> GetAll();
     }
 }

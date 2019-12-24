@@ -17,6 +17,8 @@ using SorteadorFolgados.Infra.Repositories;
 using SorteadorFolgados.Domain.Interfaces.Repository;
 using SorteadorFolgados.Infra.Context;
 using Microsoft.EntityFrameworkCore;
+using SorteadorFolgados.Application;
+using SorteadorFolgados.Application.Interfaces;
 
 namespace SorteadorFolgados
 {
@@ -49,7 +51,7 @@ namespace SorteadorFolgados
                 .ConfigureServices(services =>
                 {
                     // Add framework services.Microsoft.VisualStudio.ExtensionManager.ExtensionManagerService
-                    services.AddMvc();
+                    //services.AddMvc();
 
                     if (HasGcpProjectId)
                     {
@@ -66,25 +68,38 @@ namespace SorteadorFolgados
                         services.AddSingleton<ILoggerProvider>(sp => GoogleLoggerProvider.Create(GcpProjectId));
                     }
 
+                    //Banco de Dados
                     services.AddEntityFrameworkNpgsql().AddDbContext<BancoContexto>(options =>
                     {
                         options.UseNpgsql(Configuration.GetConnectionString("BancoSorteadorString"));
                     });
 
+
+                    //AutoMapper
                     var mappingConfig = new MapperConfiguration(mc => 
                     {
                         mc.AddProfile(new DomainToViewProfile());
                         mc.AddProfile(new ViewToDomainProfile());
                     });
-
                     IMapper mapper = mappingConfig.CreateMapper();
                     services.AddSingleton(mapper);
+
+
+                    //Ninject
                     services.AddTransient<ISorteioService, SorteioService>();
                     services.AddTransient<ISorteioDetalheService, SorteioDetalheService>();
+                    services.AddTransient<ISalaService, SalaService>();
+                    services.AddTransient<IParticipanteService, ParticipanteService>();
+
                     services.AddTransient<ISorteioRepository, SorteioRepository>();
                     services.AddTransient<ISorteioDetalheRepository, SorteioDetalheRepository>();
-                    services.AddTransient<ISalaService, SalaService>();
                     services.AddTransient<ISalaRepository, SalaRepository>();
+                    services.AddTransient<IParticipanteRepository, ParticipanteRepository>();
+
+                    services.AddTransient<ISorteioAppService, SorteioAppService>();
+                    services.AddTransient<ISorteioDetalheAppService, SorteioDetalheAppService>();
+                    services.AddTransient<ISalaAppService, SalaAppService>();
+                    services.AddTransient<IParticipanteAppService, ParticipanteAppService>();
                     services.AddMvc();
                 })
                 .ConfigureLogging(loggingBuilder =>

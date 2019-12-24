@@ -2,6 +2,7 @@
 using SorteadorFolgados.Domain.Interfaces.Repository;
 using SorteadorFolgados.Domain.Interfaces.Services;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace SorteadorFolgados.Domain.Services
@@ -16,11 +17,20 @@ namespace SorteadorFolgados.Domain.Services
             _sorteioDetalhesRepository = sorteioDetalhesRepository;
         }
 
-        public override SorteioDetalhe Add(SorteioDetalhe sorteioDetalhe)
+        public void Sortear(Sorteio sorteioAtual, Participante participante, string EnderecoIP)
         {
+            if(sorteioAtual.Participacoes.Any(p => p.Participante == participante))
+            {
+                throw new Exception("Você já está participando do sorteio.");
+            }
+
+            var sorteioDetalhe = new SorteioDetalhe();
+            sorteioDetalhe.Participante = participante;
+            sorteioDetalhe.Sorteio = sorteioAtual;
+            sorteioDetalhe.EnderecoIP = EnderecoIP;
             sorteioDetalhe.Pontos = new Random().Next(0, 1000);
             sorteioDetalhe.DataParticipacao = DateTime.Now;
-            return base.Add(sorteioDetalhe);
+            base.Add(sorteioDetalhe);
         }
 
         public List<SorteioDetalhe> GetSorteioDetalhes(int sorteioId)

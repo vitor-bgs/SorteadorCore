@@ -2,7 +2,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SorteadorFolgados.Domain.Entities;
-using SorteadorFolgados.Domain.Interfaces.Services;
+using SorteadorFolgados.Application.Interfaces;
 using SorteadorFolgados.ViewModel;
 
 namespace SorteadorFolgados.Controllers
@@ -10,20 +10,20 @@ namespace SorteadorFolgados.Controllers
     public class SorteioController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly ISorteioService _sorteioService;
-        private readonly ISorteioDetalheService _sorteioDetalheService;
+        private readonly ISorteioAppService _sorteioAppService;
+        private readonly ISorteioDetalheAppService _sorteioDetalheAppService;
 
-        public SorteioController(IMapper mapper, ISorteioService sorteioService, ISorteioDetalheService sorteioDetalheService)
+        public SorteioController(IMapper mapper, ISorteioAppService sorteioAppService, ISorteioDetalheAppService sorteioDetalheAppService)
         {
             _mapper = mapper;
-            _sorteioService = sorteioService;
-            _sorteioDetalheService = sorteioDetalheService;
+            _sorteioAppService = sorteioAppService;
+            _sorteioDetalheAppService = sorteioDetalheAppService;
         }
 
         public IActionResult Index()
         {
 
-            var sorteioAtual = _sorteioService.ObterSorteioAtual();
+            var sorteioAtual = _sorteioAppService.ObterSorteioAtual();
             return View(_mapper.Map<Sorteio,SorteioViewModel>(sorteioAtual));
         }
 
@@ -36,14 +36,8 @@ namespace SorteadorFolgados.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Sortear(string nome)
         {
-            if (_sorteioService.ObterSorteioAtual().Participacoes.Any(p => p.Participante.Nome == nome))
-            {
-                return RedirectToAction("Index");
-            }
-
             string enderecoIP = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            var participacao = new SorteioDetalhe() { SorteioId = _sorteioService.ObterSorteioAtual().SorteioId, EnderecoIP = enderecoIP, Participante = new Participante() { Nome = nome } };
-            _sorteioDetalheService.Add(participacao);
+            _sorteioDetalheAppService.Sortear(nome, enderecoIP);
             return RedirectToAction("Index");
         }
 

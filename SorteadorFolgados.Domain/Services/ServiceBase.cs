@@ -13,9 +13,9 @@ namespace SorteadorFolgados.Domain.Services
             _repository = repository;
         }
 
-        public virtual TEntity Add(TEntity entity)
+        public virtual TEntity Add(TEntity obj)
         {
-            return _repository.Add(entity);
+            return _repository.Add(obj);
         }
 
         public void Dispose()
@@ -33,14 +33,14 @@ namespace SorteadorFolgados.Domain.Services
             return _repository.GetAll();
         }
 
-        public void Remove(TEntity entity)
+        public void Remove(TEntity obj)
         {
-            _repository.Remove(entity);
+            _repository.Remove(obj);
         }
 
-        public void Update(TEntity entity)
+        public void Update(TEntity obj)
         {
-            _repository.Update(entity);
+            _repository.Update(obj);
         }
     }
 }

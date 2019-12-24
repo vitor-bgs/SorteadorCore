@@ -6,9 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SorteadorFolgados.Domain.Entities;
-using SorteadorFolgados.Domain.Interfaces.Services;
-using SorteadorFolgados.Domain.Services;
-using SorteadorFolgados.Infra.Repositories;
+using SorteadorFolgados.Application.Interfaces;
 using SorteadorFolgados.ViewModel;
 
 namespace SorteadorFolgados.Controllers
@@ -16,21 +14,21 @@ namespace SorteadorFolgados.Controllers
     public class SalaController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly ISalaService _salaService;
-        private readonly ISorteioService _sorteioService;
+        private readonly ISalaAppService _salaAppService;
+        private readonly ISorteioAppService _sorteioAppService;
 
-        public SalaController(IMapper mapper, ISalaService salaService, ISorteioService sorteioService)
+        public SalaController(IMapper mapper, ISalaAppService salaAppService, ISorteioAppService sorteioAppService)
         {
             _mapper = mapper;
-            _salaService = salaService;
-            _sorteioService = sorteioService;
+            _salaAppService = salaAppService;
+            _sorteioAppService = sorteioAppService;
         }
 
         // GET: Sala
         public ActionResult Index()
         {
-            var salas = _salaService.GetAll().Select(s => _mapper.Map<Sala, SalaViewModel>(s));
-            var sorteio = _sorteioService.ObterSorteioAtual();
+            var salas = _salaAppService.GetAll().Select(s => _mapper.Map<Sala, SalaViewModel>(s));
+            var sorteio = _sorteioAppService.ObterSorteioAtual();
             if(sorteio == null)
             {
                 return View(salas.OrderBy(s => s.SalaId));
@@ -42,7 +40,7 @@ namespace SorteadorFolgados.Controllers
         // GET: Sala/Details/5
         public ActionResult Details(int id)
         {
-            var salas = _mapper.Map<Sala, SalaViewModel>(_salaService.Get(id));
+            var salas = _mapper.Map<Sala, SalaViewModel>(_salaAppService.Get(id));
             return View(salas);
         }
 
@@ -60,7 +58,7 @@ namespace SorteadorFolgados.Controllers
             try
             {
                 var salaDomain = _mapper.Map<SalaViewModel, Sala>(sala);
-                _salaService.Add(salaDomain);
+                _salaAppService.Add(salaDomain);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -74,7 +72,7 @@ namespace SorteadorFolgados.Controllers
         // GET: Sala/Edit/5
         public ActionResult Edit(int id)
         {
-            var salas = _mapper.Map<Sala, SalaViewModel>(_salaService.Get(id));
+            var salas = _mapper.Map<Sala, SalaViewModel>(_salaAppService.Get(id));
             return View(salas);
         }
 
@@ -85,7 +83,7 @@ namespace SorteadorFolgados.Controllers
         {
             try
             {
-                _salaService.Update(_mapper.Map<SalaViewModel, Sala>(sala));
+                _salaAppService.Update(_mapper.Map<SalaViewModel, Sala>(sala));
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -97,7 +95,7 @@ namespace SorteadorFolgados.Controllers
         // GET: Sala/Delete/5
         public ActionResult Delete(int id)
         {
-            var salas = _mapper.Map<Sala, SalaViewModel>(_salaService.Get(id));
+            var salas = _mapper.Map<Sala, SalaViewModel>(_salaAppService.Get(id));
             return View(salas);
         }
 
@@ -109,7 +107,7 @@ namespace SorteadorFolgados.Controllers
             try
             {
                 sala.SalaId = id;
-                _salaService.Remove(_mapper.Map<SalaViewModel, Sala>(sala));
+                _salaAppService.Remove(_mapper.Map<SalaViewModel, Sala>(sala));
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -121,8 +119,8 @@ namespace SorteadorFolgados.Controllers
 
         public ActionResult IniciarSorteio(int SalaId)
         {
-            var sala = _salaService.Get(SalaId);
-            _sorteioService.IniciarNovoSorteio(sala);
+            var sala = _salaAppService.Get(SalaId);
+            _sorteioAppService.IniciarNovoSorteio(sala);
             return RedirectToAction(nameof(Index));
         }
     }

@@ -26,7 +26,7 @@ namespace SorteadorFolgados.Infra.Repositories
 
         public void Dispose()
         {
-            //throw new NotImplementedException();
+            Db.Dispose();
         }
 
         public virtual TEntity Get(int id)
