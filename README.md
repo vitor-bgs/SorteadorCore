@@ -13,3 +13,5 @@ A página principal também exibe todas as participações do sorteio atual.
 # Desenvolvimento
 
 Para executar o projeto, pode-se utilizar o Visual Studio (com o componente .Net Core instalado) para abrir a solution SorteadorFolgados.sln e clicar em executar.
+
+É necessário um banco de dados PostgreSQL, e sua string de conexão deve ser colocada no arquivo appsettings.json como "BancoSorteadorString"
