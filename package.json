@@ -1,0 +1,23 @@
+{
+  "name": "SorteadorCore",
+  "version": "1.0.0",
+  "description": "Sorteador para o clã Folgados do MMORPG Perfect World.\r Desenvolvido para estudos de .NET Core 2.1 e Domain Driven Design",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vitor-bgs/SorteadorCore.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vitor-bgs/SorteadorCore/issues"
+  },
+  "homepage": "https://github.com/vitor-bgs/SorteadorCore#readme",
+  "dependencies": {
+    "@aspnet/signalr": "^1.1.4"
+  }
+}

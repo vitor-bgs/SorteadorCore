@@ -19,6 +19,7 @@ using SorteadorFolgados.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using SorteadorFolgados.Application;
 using SorteadorFolgados.Application.Interfaces;
+using SorteadorFolgados.Hubs;
 
 namespace SorteadorFolgados
 {
@@ -101,6 +102,7 @@ namespace SorteadorFolgados
                     services.AddTransient<ISalaAppService, SalaAppService>();
                     services.AddTransient<IParticipanteAppService, ParticipanteAppService>();
                     services.AddMvc();
+                    services.AddSignalR();
                 })
                 .ConfigureLogging(loggingBuilder =>
                 {
@@ -166,7 +168,12 @@ namespace SorteadorFolgados
                     {
                         routes.MapRoute(
                             name: "default",
-                            template: "{controller=Sorteio}/{action=Index}/{id?}");
+                            template: "{controller=Sorteios}/{action=Index}/{id?}");
+                    });
+
+                    app.UseSignalR(routes =>
+                    {
+                        routes.MapHub<SorteioHub>("/sorteio");
                     });
                 })
                 .Build();

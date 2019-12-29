@@ -1,0 +1,64 @@
+﻿@model IEnumerable<SorteadorFolgados.ViewModel.SalaViewModel>
+
+@{
+    ViewData["Title"] = "Configuração de Salas";
+}
+
+<h2>Configuração de Salas</h2>
+
+<p>
+    <a asp-action="Create">Criar Nova Sala</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Sala ID
+            </th>
+            <th>
+                Nome da Sala
+            </th>
+            <th>
+                Número de Vencedores (Maiores Pontos)
+            </th>
+            <th>
+                Número de Vencedores (Menores Pontos)
+            </th>
+            <th>
+                Ações
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @item.SalaId
+            </td>
+            <td>
+                @item.Nome
+            </td>
+            <td>
+                @item.QuantidadeVencedoresMaioresPontos
+            </td>
+            <td>
+                @item.QuantidadeVencedoresMenoresPontos
+            </td>
+            <td>
+                @if (item.EstaNoSorteioAtual)
+                {
+                    <a href="#" onclick="encerrarSorteio(@item.SalaId)">Encerrar Sorteio</a>
+                }
+                else
+                {
+                    <a href="#" onclick="iniciarSorteio(@item.SalaId)">Iniciar Sorteio</a>
+                }
+                | 
+                <a href="Salas/Edit/@item.SalaId" >Editar</a> | 
+                <a href="Salas/Delete/@item.SalaId">Deletar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<script src="~/js/salas.js"></script>

@@ -17,5 +17,6 @@ namespace SorteadorFolgados.ViewModel
 
         public virtual SalaViewModel Sala { get; set; }
         public virtual List<SorteioDetalheViewModel> Participacoes { get; set; }
+        public virtual ParticipanteViewModel ParticipanteAtual { get; set; }
     }
 }

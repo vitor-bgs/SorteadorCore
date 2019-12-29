@@ -1,0 +1,30 @@
+﻿<h2 id="Sorteio"></h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form>
+            <div class="form-group">
+                <input id="nomeParticipante" required class="form-control" />
+                <input type="submit" value="Sortear" class="btn btn-default" onclick="sortearClick()" />
+                <span class="text-danger"></span>
+            </div>
+        </form>
+    </div>
+</div>
+<p>
+    <a asp-action="Index">Atualizar Resultados</a>
+</p>
+<table id="Participacoes" class="table">
+    <thead>
+        <tr>
+            <th>Pontos</th>
+            <th>Nome</th>
+            <th>IP</th>
+            <th>Data e Hora</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<script src="~/lib/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/sorteios.js"></script>
