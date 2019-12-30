@@ -4,15 +4,13 @@
     ViewData["Title"] = "Delete";
 }
 
-<h2>Delete</h2>
+<h2 class="mdc-typography--headline4">Deletar Sala</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3 class="mdc-typography--subtitle2">Tem certeza que deseja deletar a sala?</h3>
 <div>
-    <h4>SalaViewModel</h4>
-    <hr />
-    <dl class="dl-horizontal">
+    <dl class="mdc-typography--body2">
         <dt>
-            @Html.DisplayNameFor(model => model.SalaId)
+            Sala ID
         </dt>
         <dd>
             @Html.DisplayFor(model => model.SalaId)
@@ -38,7 +36,7 @@
     </dl>
     
     <form asp-action="Delete">
-        <input type="submit" value="Delete" class="btn btn-default" /> |
-        <a asp-action="Index">Back to List</a>
+        <button class="mdc-button mdc-button--raised">Deletar</button><br />
+        <a asp-action="Index" class="mdc-button">Voltar para a lista</a>
     </form>
 </div>

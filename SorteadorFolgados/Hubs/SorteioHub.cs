@@ -34,15 +34,24 @@ namespace SorteadorFolgados.Hubs
 
         public async Task Sortear(string nomeParticipante)
         {
-            Sorteio sorteioAtual = _sorteioAppService.ObterSorteioAtual();
-            if (sorteioAtual == null)
+            try
+            {
+                Sorteio sorteioAtual = _sorteioAppService.ObterSorteioAtual();
+                if (sorteioAtual == null)
+                {
+                    await Clients.Caller.SendAsync("error", "Não há sorteio em aberto");
+                    return;
+                }
+                string EnderecoIP = Context.GetHttpContext().Connection.RemoteIpAddress.MapToIPv4().ToString();
+                _sorteioDetalheAppService.Sortear(nomeParticipante, EnderecoIP);
+                await Clients.All.SendAsync("atualizarSorteio", _mapper.Map<Sorteio, SorteioViewModel>(sorteioAtual));
+                var participacao = _sorteioDetalheAppService.GetSorteioDetalhes(sorteioAtual.SorteioId).First(p => p.Participante.Nome == nomeParticipante);
+                await Clients.Caller.SendAsync("sortearOk", _mapper.Map<SorteioDetalhe, SorteioDetalheViewModel>(participacao));
+            }
+            catch
             {
                 await Clients.Caller.SendAsync("error", "Não há sorteio em aberto");
-                return;
             }
-            string EnderecoIP = Context.GetHttpContext().Connection.RemoteIpAddress.MapToIPv4().ToString();
-            _sorteioDetalheAppService.Sortear(nomeParticipante, EnderecoIP);
-            await Clients.All.SendAsync("atualizarSorteio", _mapper.Map<Sorteio, SorteioViewModel>(sorteioAtual));
         }
     }
 }

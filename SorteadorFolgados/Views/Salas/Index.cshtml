@@ -4,61 +4,64 @@
     ViewData["Title"] = "Configuração de Salas";
 }
 
-<h2>Configuração de Salas</h2>
+<h2 class="mdc-typography--headline4">Configuração de Salas</h2>
 
 <p>
-    <a asp-action="Create">Criar Nova Sala</a>
+    <a asp-action="Create" class="mdc-button">Criar Nova Sala</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Sala ID
-            </th>
-            <th>
-                Nome da Sala
-            </th>
-            <th>
-                Número de Vencedores (Maiores Pontos)
-            </th>
-            <th>
-                Número de Vencedores (Menores Pontos)
-            </th>
-            <th>
-                Ações
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @item.SalaId
-            </td>
-            <td>
-                @item.Nome
-            </td>
-            <td>
-                @item.QuantidadeVencedoresMaioresPontos
-            </td>
-            <td>
-                @item.QuantidadeVencedoresMenoresPontos
-            </td>
-            <td>
-                @if (item.EstaNoSorteioAtual)
-                {
-                    <a href="#" onclick="encerrarSorteio(@item.SalaId)">Encerrar Sorteio</a>
-                }
-                else
-                {
-                    <a href="#" onclick="iniciarSorteio(@item.SalaId)">Iniciar Sorteio</a>
-                }
-                | 
-                <a href="Salas/Edit/@item.SalaId" >Editar</a> | 
-                <a href="Salas/Delete/@item.SalaId">Deletar</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="mdc-data-table">
+    <table class="mdc-data-table__table">
+        <thead>
+            <tr class="mdc-data-table__header-row">
+                <th class="mdc-data-table__header-cell mdc-data-table__header-cell--numeric">
+                    Sala ID
+                </th>
+                <th class="mdc-data-table__header-cell">
+                    Nome da Sala
+                </th>
+                <th class="mdc-data-table__header-cell">
+                    Número de Vencedores (Maiores Pontos)
+                </th>
+                <th class="mdc-data-table__header-cell">
+                    Número de Vencedores (Menores Pontos)
+                </th>
+                <th class="mdc-data-table__header-cell">
+                    Ações
+                </th>
+            </tr>
+        </thead>
+        <tbody class="mdc-data-table__content">
+            @foreach (var item in Model)
+            {
+                <tr class="mdc-data-table__row">
+                    <td class="mdc-data-table__cell--numeric">
+                        @item.SalaId
+                    </td>
+                    <td class="mdc-data-table__cell">
+                        @item.Nome
+                    </td>
+                    <td class="mdc-data-table__cell">
+                        @item.QuantidadeVencedoresMaioresPontos
+                    </td>
+                    <td class="mdc-data-table__cell">
+                        @item.QuantidadeVencedoresMenoresPontos
+                    </td>
+                    <td class="mdc-data-table__cell">
+                        @if (item.EstaNoSorteioAtual)
+                        {
+                            <a href="#" onclick="encerrarSorteio(@item.SalaId)">Encerrar Sorteio</a>
+                        }
+                        else
+                        {
+                            <a href="#" onclick="iniciarSorteio(@item.SalaId)">Iniciar Sorteio</a>
+                        }
+                        |
+                        <a href="Salas/Edit/@item.SalaId">Editar</a> |
+                        <a href="Salas/Delete/@item.SalaId">Deletar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 <script src="~/js/salas.js"></script>

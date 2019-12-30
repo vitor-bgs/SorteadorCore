@@ -1,48 +1,49 @@
 ﻿@model SorteadorFolgados.ViewModel.SalaViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar";
 }
 
-<h2>Edit</h2>
-
-<h4>SalaViewModel</h4>
+<h2 class="mdc-typography--headline4">Editar Sala</h2>
 <hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="mdc-layout-grid">
+    <div class="mdc-layout-grid__cell--span-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="SalaId" class="control-label"></label>
-                <input asp-for="SalaId" class="form-control" />
+            <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
+                <label asp-for="SalaId" class="mdc-floating-label"></label>
+                <input asp-for="SalaId" class="mdc-text-field__input" disabled/>
                 <span asp-validation-for="SalaId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Nome" class="control-label"></label>
-                <input asp-for="Nome" class="form-control" />
+            </div><br />
+            <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
+                <label asp-for="Nome" class="mdc-floating-label"></label>
+                <input asp-for="Nome" class="mdc-text-field__input" />
                 <span asp-validation-for="Nome" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="QuantidadeVencedoresMaioresPontos" class="control-label"></label>
-                <input asp-for="QuantidadeVencedoresMaioresPontos" class="form-control" />
+            </div><br />
+            <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
+                <label asp-for="QuantidadeVencedoresMaioresPontos" class="mdc-floating-label"></label>
+                <input asp-for="QuantidadeVencedoresMaioresPontos" class="mdc-text-field__input" />
                 <span asp-validation-for="QuantidadeVencedoresMaioresPontos" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="QuantidadeVencedoresMenoresPontos" class="control-label"></label>
-                <input asp-for="QuantidadeVencedoresMenoresPontos" class="form-control" />
+            </div><br />
+            <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
+                <label asp-for="QuantidadeVencedoresMenoresPontos" class="mdc-floating-label"></label>
+                <input asp-for="QuantidadeVencedoresMenoresPontos" class="mdc-text-field__input" />
                 <span asp-validation-for="QuantidadeVencedoresMenoresPontos" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
+            </div><br />
+            <div>
+                <button class="mdc-button mdc-button--raised" onclick="editarSalaClick()">Salvar Alterações</button>
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="mdc-button">Voltar para a lista</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+<script src="~/js/salas.js"></script>
+<script>
+    function editarSalaClick() {
+
+    }
+</script>
