@@ -29,7 +29,13 @@ namespace SorteadorFolgados.Controllers.api
         [HttpGet]
         public ActionResult<IEnumerable<SalaViewModel>> Salas()
         {
-            return Ok(_salaAppService.GetAll().Select(s => _mapper.Map<Sala, SalaViewModel>(s)));
+            var salas = _salaAppService.GetAll().Select(s => _mapper.Map<Sala, SalaViewModel>(s));
+            var sorteio = _sorteioAppService.ObterSorteioAtual();
+            if (sorteio == null)
+            {
+                return Ok(salas.OrderBy(s => s.SalaId));
+            }
+            return Ok(salas.Select(s => { s.EstaNoSorteioAtual = s.SalaId == sorteio.SalaId; return s; }).OrderBy(s => s.SalaId));
         }
 
         [HttpGet("{id}")]

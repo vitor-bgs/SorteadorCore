@@ -6,37 +6,18 @@
 
 <h2 class="mdc-typography--headline4">Deletar Sala</h2>
 
-<h3 class="mdc-typography--subtitle2">Tem certeza que deseja deletar a sala?</h3>
+<h3 class="mdc-typography--subtitle1">Tem certeza que deseja deletar a sala?</h3>
 <div>
-    <dl class="mdc-typography--body2">
-        <dt>
-            Sala ID
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.SalaId)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Nome)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Nome)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.QuantidadeVencedoresMaioresPontos)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.QuantidadeVencedoresMaioresPontos)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.QuantidadeVencedoresMenoresPontos)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.QuantidadeVencedoresMenoresPontos)
-        </dd>
-    </dl>
-    
+    <p class="mdc-typography--body2">
+        <span>Sala ID: </span><span id="salaId" class="mdc-typography--body1">@Model.SalaId</span><br />
+        <span>Nome: </span><span id="nome" class="mdc-typography--body1">@Model.Nome</span><br />
+        <span>Quantidade Vencedores (Maiores Pontos): </span><span id="quantidadeVencedoresMaioresPontos" class="mdc-typography--body1">@Model.QuantidadeVencedoresMaioresPontos</span><br />
+        <span>Quantidade Vencedores (Menores Pontos): </span><span id="quantidadeVencedoresMenoresPontos" class="mdc-typography--body1">@Model.QuantidadeVencedoresMenoresPontos</span>
+    </p>
     <form asp-action="Delete">
-        <button class="mdc-button mdc-button--raised">Deletar</button><br />
+        <button class="mdc-button mdc-button--raised" onclick="deletarSalaClick()">Deletar</button><br />
         <a asp-action="Index" class="mdc-button">Voltar para a lista</a>
     </form>
 </div>
+
+<script src="~/js/salas.js"></script>

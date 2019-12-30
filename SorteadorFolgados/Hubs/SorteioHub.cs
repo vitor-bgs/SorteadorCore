@@ -25,10 +25,12 @@ namespace SorteadorFolgados.Hubs
         public override Task OnConnectedAsync()
         {
             Sorteio sorteioAtual = _sorteioAppService.ObterSorteioAtual();
-            if(sorteioAtual != null)
+            if(sorteioAtual is null)
             {
-                Clients.Caller.SendAsync("atualizarSorteio", _mapper.Map<Sorteio, SorteioViewModel>(sorteioAtual));
+                Clients.Caller.SendAsync("aviso", "Não há sorteio ativo no momento");
+                return base.OnConnectedAsync();
             }
+            Clients.Caller.SendAsync("atualizarSorteio", _mapper.Map<Sorteio, SorteioViewModel>(sorteioAtual));
             return base.OnConnectedAsync();
         }
 
@@ -37,20 +39,20 @@ namespace SorteadorFolgados.Hubs
             try
             {
                 Sorteio sorteioAtual = _sorteioAppService.ObterSorteioAtual();
-                if (sorteioAtual == null)
+                if (sorteioAtual is null)
                 {
-                    await Clients.Caller.SendAsync("error", "Não há sorteio em aberto");
+                    await Clients.Caller.SendAsync("aviso", "Não há sorteio ativo no momento");
                     return;
                 }
                 string EnderecoIP = Context.GetHttpContext().Connection.RemoteIpAddress.MapToIPv4().ToString();
                 _sorteioDetalheAppService.Sortear(nomeParticipante, EnderecoIP);
                 await Clients.All.SendAsync("atualizarSorteio", _mapper.Map<Sorteio, SorteioViewModel>(sorteioAtual));
                 var participacao = _sorteioDetalheAppService.GetSorteioDetalhes(sorteioAtual.SorteioId).First(p => p.Participante.Nome == nomeParticipante);
-                await Clients.Caller.SendAsync("sortearOk", _mapper.Map<SorteioDetalhe, SorteioDetalheViewModel>(participacao));
+                await Clients.Caller.SendAsync("aviso", participacao.Participante.Nome + " sorteou o número " + participacao.Pontos);
             }
             catch
             {
-                await Clients.Caller.SendAsync("error", "Não há sorteio em aberto");
+                await Clients.Caller.SendAsync("aviso", "Houve um erro ao sortear");
             }
         }
     }

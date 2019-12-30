@@ -4,3 +4,7 @@ function SnackbarMessage(texto) {
     snackbar.labelText = texto;
     snackbar.open();
 }
+
+function aviso(mensagem) {
+    SnackbarMessage(mensagem);
+}

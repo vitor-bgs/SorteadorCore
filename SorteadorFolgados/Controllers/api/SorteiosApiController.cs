@@ -59,8 +59,8 @@ namespace SorteadorFolgados.Controllers.api
 
         }
 
-        [HttpPost("iniciar-sorteio")]
-        public ActionResult IniciarSorteio([FromBody]int SalaId)
+        [HttpPost("iniciar-sorteio/{SalaId}")]
+        public ActionResult IniciarSorteio(int SalaId)
         {
             try
             {

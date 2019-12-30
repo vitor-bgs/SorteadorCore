@@ -2,7 +2,7 @@
 
 var connection = new signalR.HubConnectionBuilder().withUrl("/sorteio").build();
 connection.on("atualizarSorteio", atualizarSorteio);
-connection.on("sortearOk", sortearOk);
+connection.on("aviso", aviso);
 connection.start()
     .then(function () {
         console.log("conexão iniciada.");
@@ -11,10 +11,6 @@ connection.start()
         console.error(err.toString());
         SnackbarMessage("Erro ao conectar");
     });
-
-function sortearOk(participacao) {
-    SnackbarMessage(participacao.participante.nome + ": " + participacao.pontos);
-}
 
 function atualizarSorteio(sorteioAtual) {
     const sala = sorteioAtual.sala.nome;
@@ -43,7 +39,7 @@ function atualizarSorteio(sorteioAtual) {
 
 
 
-function sortear(nomeParticipante, ) {
+function sortear(nomeParticipante) {
     connection.invoke("Sortear", nomeParticipante).catch(function (err) { console.error(err); });
 }
 

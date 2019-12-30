@@ -12,22 +12,22 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
                 <label asp-for="SalaId" class="mdc-floating-label"></label>
-                <input asp-for="SalaId" class="mdc-text-field__input" disabled/>
+                <input id="salaId" asp-for="SalaId" class="mdc-text-field__input" disabled />
                 <span asp-validation-for="SalaId" class="text-danger"></span>
             </div><br />
             <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
                 <label asp-for="Nome" class="mdc-floating-label"></label>
-                <input asp-for="Nome" class="mdc-text-field__input" />
+                <input id="nome" asp-for="Nome" class="mdc-text-field__input" />
                 <span asp-validation-for="Nome" class="text-danger"></span>
             </div><br />
             <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
                 <label asp-for="QuantidadeVencedoresMaioresPontos" class="mdc-floating-label"></label>
-                <input asp-for="QuantidadeVencedoresMaioresPontos" class="mdc-text-field__input" />
+                <input id="quantidadeVencedoresMaioresPontos" asp-for="QuantidadeVencedoresMaioresPontos" class="mdc-text-field__input" />
                 <span asp-validation-for="QuantidadeVencedoresMaioresPontos" class="text-danger"></span>
             </div><br />
             <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
                 <label asp-for="QuantidadeVencedoresMenoresPontos" class="mdc-floating-label"></label>
-                <input asp-for="QuantidadeVencedoresMenoresPontos" class="mdc-text-field__input" />
+                <input id="quantidadeVencedoresMenoresPontos" asp-for="QuantidadeVencedoresMenoresPontos" class="mdc-text-field__input" />
                 <span asp-validation-for="QuantidadeVencedoresMenoresPontos" class="text-danger"></span>
             </div><br />
             <div>
@@ -40,10 +40,4 @@
 <div>
     <a asp-action="Index" class="mdc-button">Voltar para a lista</a>
 </div>
-
 <script src="~/js/salas.js"></script>
-<script>
-    function editarSalaClick() {
-
-    }
-</script>

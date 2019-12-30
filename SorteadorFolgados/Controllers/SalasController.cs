@@ -26,13 +26,7 @@ namespace SorteadorFolgados.Controllers
 
         public ActionResult Index()
         {
-            var salas = _salaAppService.GetAll().Select(s => _mapper.Map<Sala, SalaViewModel>(s));
-            var sorteio = _sorteioAppService.ObterSorteioAtual();
-            if(sorteio == null)
-            {
-                return View(salas.OrderBy(s => s.SalaId));
-            }
-            return View(salas.Select(s => { s.EstaNoSorteioAtual = s.SalaId == sorteio.SalaId; return s; }).OrderBy(s => s.SalaId));
+           return View();
         }
         public ActionResult Create()
         {
