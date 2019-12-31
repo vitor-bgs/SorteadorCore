@@ -9,18 +9,12 @@ namespace SorteadorFolgados.ViewModel
 {
     public class SorteioDetalheViewModel
     {
-        [Key]
         public int SorteioDetalheId { get; set; }
-
         public int SorteioId { get; set; }
-
         public virtual ParticipanteViewModel Participante { get; set; }
-
-        [DisplayName("Endereço IP")]
         public string EnderecoIP { get; set; }
         public int Pontos { get; set; }
-
-        [DisplayName("Data")]
+        public bool ParticipacaoValida { get; set; }
         public DateTime DataParticipacao { get; set; }
     }
 }

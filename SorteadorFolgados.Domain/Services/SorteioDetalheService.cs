@@ -30,6 +30,7 @@ namespace SorteadorFolgados.Domain.Services
             sorteioDetalhe.EnderecoIP = EnderecoIP;
             sorteioDetalhe.Pontos = new Random().Next(0, 1000);
             sorteioDetalhe.DataParticipacao = DateTime.Now;
+            sorteioDetalhe.ParticipacaoValida = true;
             base.Add(sorteioDetalhe);
         }
 

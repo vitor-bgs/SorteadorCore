@@ -10,5 +10,6 @@ namespace SorteadorFolgados.Application.Interfaces
         Sorteio ObterSorteioAtual();
         void IniciarNovoSorteio(Sala sala);
         void EncerrarSorteioAtual();
+        List<Sorteio> ObterSorteiosComParticipacoesVencedoras(DateTime dataInicial, DateTime dataFinal);
     }
 }

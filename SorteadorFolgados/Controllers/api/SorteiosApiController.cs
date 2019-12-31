@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using SorteadorFolgados.Application.Interfaces;
 using SorteadorFolgados.Domain.Entities;
 using SorteadorFolgados.ViewModel;
+using SorteadorFolgados.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace SorteadorFolgados.Controllers.api
 {
@@ -17,15 +19,18 @@ namespace SorteadorFolgados.Controllers.api
     {
         private readonly IMapper _mapper;
         private readonly ISorteioAppService _sorteioAppService;
-        private readonly ISorteioDetalheAppService _sorteioDetalheAppService;
         private readonly ISalaAppService _salaAppService;
-
-        public SorteiosApiController(IMapper mapper, ISorteioAppService sorteioAppService, ISorteioDetalheAppService sorteioDetalheAppService, ISalaAppService salaAppService)
+        private readonly IHubContext<SorteioHub> _sorteioHubContext;
+        public SorteiosApiController(
+            IMapper mapper, 
+            ISorteioAppService sorteioAppService, 
+            ISalaAppService salaAppService,
+            IHubContext<SorteioHub> sorteioHubContext)
         {
             _mapper = mapper;
             _sorteioAppService = sorteioAppService;
-            _sorteioDetalheAppService = sorteioDetalheAppService;
             _salaAppService = salaAppService;
+            _sorteioHubContext = sorteioHubContext;
         }
 
         [HttpGet]
@@ -67,7 +72,11 @@ namespace SorteadorFolgados.Controllers.api
                 var sala = _salaAppService.Get(SalaId);
                 if (sala is null) return BadRequest("Sala inválida");
                 _sorteioAppService.IniciarNovoSorteio(sala);
-                return Ok(_sorteioAppService.ObterSorteioAtual());
+                var sorteioAtual = _mapper.Map<Sorteio,SorteioViewModel>(_sorteioAppService.ObterSorteioAtual());
+                _sorteioHubContext.Clients.All.SendAsync("atualizarSorteio", sorteioAtual);
+                _sorteioHubContext.Clients.All.SendAsync("atualizarVencedores");
+                _sorteioHubContext.Clients.All.SendAsync("aviso", "Sorteio " + sorteioAtual.Sala.Nome + " iniciado");
+                return Ok(sorteioAtual);
             }
             catch
             {
@@ -80,8 +89,28 @@ namespace SorteadorFolgados.Controllers.api
         {
             try
             {
+                var sorteioAtual = _sorteioAppService.ObterSorteioAtual();
                 _sorteioAppService.EncerrarSorteioAtual();
+                _sorteioHubContext.Clients.All.SendAsync("atualizarSorteio", null);
+                _sorteioHubContext.Clients.All.SendAsync("atualizarVencedores");
+                _sorteioHubContext.Clients.All.SendAsync("aviso", "Sorteio " + sorteioAtual.Sala.Nome + " encerrado");
                 return NoContent();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("obter-vencedores-sorteios/{HaNsemanas}")]
+        public ActionResult<List<SorteioViewModel>> ObterVencedoresSorteios(int HaNSemanas)
+        {
+            try
+            {
+                var dataInicial = DateTime.Today.AddDays(-6).AddDays(-7*HaNSemanas);
+                var dataFinal = DateTime.Today.AddDays(1).AddMilliseconds(-1).AddDays(-7*HaNSemanas);
+                var sorteiosComVencedores = _sorteioAppService.ObterSorteiosComParticipacoesVencedoras(dataInicial, dataFinal);
+                return Ok(_mapper.Map<List<Sorteio>, List<SorteioViewModel>>(sorteiosComVencedores));
             }
             catch
             {

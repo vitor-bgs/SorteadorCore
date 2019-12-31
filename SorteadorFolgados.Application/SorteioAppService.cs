@@ -1,6 +1,8 @@
 ﻿using SorteadorFolgados.Application.Interfaces;
 using SorteadorFolgados.Domain.Entities;
 using SorteadorFolgados.Domain.Interfaces.Services;
+using System;
+using System.Collections.Generic;
 
 namespace SorteadorFolgados.Application
 {
@@ -25,6 +27,11 @@ namespace SorteadorFolgados.Application
         public Sorteio ObterSorteioAtual()
         {
             return _sorteioService.ObterSorteioAtual();
+        }
+
+        public List<Sorteio> ObterSorteiosComParticipacoesVencedoras(DateTime dataInicial, DateTime dataFinal)
+        {
+            return _sorteioService.ObterVencedores(dataInicial, dataFinal);
         }
     }
 }

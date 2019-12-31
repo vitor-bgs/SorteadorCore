@@ -20,6 +20,7 @@ using Microsoft.EntityFrameworkCore;
 using SorteadorFolgados.Application;
 using SorteadorFolgados.Application.Interfaces;
 using SorteadorFolgados.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace SorteadorFolgados
 {
@@ -85,8 +86,7 @@ namespace SorteadorFolgados
                     IMapper mapper = mappingConfig.CreateMapper();
                     services.AddSingleton(mapper);
 
-
-                    //Ninject
+                    //Injeção de Dependência
                     services.AddTransient<ISorteioService, SorteioService>();
                     services.AddTransient<ISorteioDetalheService, SorteioDetalheService>();
                     services.AddTransient<ISalaService, SalaService>();

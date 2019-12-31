@@ -2,6 +2,8 @@
 using SorteadorFolgados.Domain.Interfaces.Repository;
 using SorteadorFolgados.Domain.Interfaces.Services;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SorteadorFolgados.Domain.Services
 {
@@ -35,6 +37,16 @@ namespace SorteadorFolgados.Domain.Services
         public Sorteio ObterSorteioAtual()
         {
             return _sorteioRepository.ObterSorteioAtual();
+        }
+
+        public List<Sorteio> ObterVencedores(DateTime dataInicial, DateTime dataFinal)
+        {
+            return _sorteioRepository.ObterSorteiosPorData(dataInicial, dataFinal)
+                .Where(s => s.Participacoes.Count > 0)
+                .Select(s => { 
+                    s.Participacoes = s.ObterVencedores();
+                    return s; 
+                }).ToList();
         }
 
     }

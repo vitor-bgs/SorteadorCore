@@ -38,7 +38,7 @@ function criarSala(sala) {
     $.ajax({
         type: "POST",
         url: url,
-        data: data,
+        data: JSON.stringify(data),
         contentType: "application/json",
         success: (res) => {
             console.log(res);
@@ -131,24 +131,32 @@ function preencherSalas(listaSalas) {
 }
 
 function editarSalaClick() {
-    const sala = obterSalaDeForm();
+    const sala = obterSalaParaEditar();
     atualizarSala(sala);
     event.preventDefault();
 }
 
 function deletarSalaClick() {
-    const sala = obterSalaDeTexto();
+    const sala = obterSalaParaDeletar();
     deletarSala(sala);
     event.preventDefault();
 }
 
 function criarSalaClick() {
-    const sala = obterSalaDeForm();
+    const sala = obterSalaParaCriar();
     criarSala(sala);
     event.preventDefault();
 }
 
-function obterSalaDeForm() {
+function obterSalaParaCriar() {
+    return {
+        "Nome": $("[id='nome']").val(),
+        "QuantidadeVencedoresMaioresPontos": parseInt($("[id='quantidadeVencedoresMaioresPontos']").val()),
+        "QuantidadeVencedoresMenoresPontos": parseInt($("[id='quantidadeVencedoresMenoresPontos']").val())
+    }
+}
+
+function obterSalaParaEditar() {
     return {
         "SalaId": parseInt($("[id='salaId']").val()),
         "Nome": $("[id='nome']").val(),
@@ -157,7 +165,7 @@ function obterSalaDeForm() {
     }
 }
 
-function obterSalaDeTexto() {
+function obterSalaParaDeletar() {
     return {
         "SalaId": parseInt($("[id='salaId']").text()),
         "Nome": $("[id='nome']").text(),

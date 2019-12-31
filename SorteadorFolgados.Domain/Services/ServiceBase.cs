@@ -23,22 +23,22 @@ namespace SorteadorFolgados.Domain.Services
             _repository.Dispose();
         }
 
-        public TEntity Get(int entityId)
+        public virtual TEntity Get(int entityId)
         {
             return _repository.Get(entityId);
         }
 
-        public List<TEntity> GetAll()
+        public virtual List<TEntity> GetAll()
         {
             return _repository.GetAll();
         }
 
-        public void Remove(TEntity obj)
+        public virtual void Remove(TEntity obj)
         {
             _repository.Remove(obj);
         }
 
-        public void Update(TEntity obj)
+        public virtual void Update(TEntity obj)
         {
             _repository.Update(obj);
         }

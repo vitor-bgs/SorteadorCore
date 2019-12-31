@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SorteadorFolgados.Infra.Context;
@@ -9,9 +10,10 @@ using SorteadorFolgados.Infra.Context;
 namespace SorteadorFolgados.Infra.Migrations
 {
     [DbContext(typeof(BancoContexto))]
-    partial class BancoContextoModelSnapshot : ModelSnapshot
+    [Migration("20191231123259_OpcaoAtivaParaEntidades")]
+    partial class OpcaoAtivaParaEntidades
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

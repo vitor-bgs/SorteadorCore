@@ -15,13 +15,13 @@ namespace SorteadorFolgados.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ISalaAppService _salaAppService;
-        private readonly ISorteioAppService _sorteioAppService;
 
-        public SalasController(IMapper mapper, ISalaAppService salaAppService, ISorteioAppService sorteioAppService)
+        public SalasController(
+            IMapper mapper, 
+            ISalaAppService salaAppService)
         {
             _mapper = mapper;
             _salaAppService = salaAppService;
-            _sorteioAppService = sorteioAppService;
         }
 
         public ActionResult Index()
@@ -34,13 +34,13 @@ namespace SorteadorFolgados.Controllers
         }
         public ActionResult Edit(int id)
         {
-            var salas = _mapper.Map<Sala, SalaViewModel>(_salaAppService.Get(id));
-            return View(salas);
+            var sala = _mapper.Map<Sala, SalaViewModel>(_salaAppService.Get(id));
+            return View(sala);
         }
         public ActionResult Delete(int id)
         {
-            var salas = _mapper.Map<Sala, SalaViewModel>(_salaAppService.Get(id));
-            return View(salas);
+            var sala = _mapper.Map<Sala, SalaViewModel>(_salaAppService.Get(id));
+            return View(sala);
         }
     }
 }

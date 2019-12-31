@@ -19,7 +19,10 @@ namespace SorteadorFolgados.Controllers.api
         private readonly ISalaAppService _salaAppService;
         private readonly ISorteioAppService _sorteioAppService;
 
-        public SalasApiController(IMapper mapper, ISalaAppService salaAppService, ISorteioAppService sorteioAppService)
+        public SalasApiController(
+            IMapper mapper, 
+            ISalaAppService salaAppService, 
+            ISorteioAppService sorteioAppService)
         {
             _mapper = mapper;
             _salaAppService = salaAppService;
@@ -29,13 +32,18 @@ namespace SorteadorFolgados.Controllers.api
         [HttpGet]
         public ActionResult<IEnumerable<SalaViewModel>> Salas()
         {
-            var salas = _salaAppService.GetAll().Select(s => _mapper.Map<Sala, SalaViewModel>(s));
+            var salas = _salaAppService.GetAll()
+                .Where(s => s.Ativo)
+                .Select(s => _mapper.Map<Sala, SalaViewModel>(s));
             var sorteio = _sorteioAppService.ObterSorteioAtual();
             if (sorteio == null)
             {
                 return Ok(salas.OrderBy(s => s.SalaId));
             }
-            return Ok(salas.Select(s => { s.EstaNoSorteioAtual = s.SalaId == sorteio.SalaId; return s; }).OrderBy(s => s.SalaId));
+            return Ok(
+                salas.Select(s => { s.EstaNoSorteioAtual = s.SalaId == sorteio.SalaId; return s; })
+                .OrderBy(s => s.SalaId)
+                );
         }
 
         [HttpGet("{id}")]

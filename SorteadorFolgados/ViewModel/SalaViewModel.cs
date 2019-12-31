@@ -27,6 +27,8 @@ namespace SorteadorFolgados.ViewModel
         [Range(0, int.MaxValue, ErrorMessage = "Preencha com um valor maior ou igual a zero")]
         public int QuantidadeVencedoresMenoresPontos { get; set; }
 
+        public bool Ativo { get; set; }
+
         public bool EstaNoSorteioAtual { get; set; }
     }
 }

@@ -9,6 +9,7 @@ namespace SorteadorFolgados.Domain.Entities
         public string Nome { get; set; }
         public int QuantidadeVencedoresMaioresPontos { get; set; }
         public int QuantidadeVencedoresMenoresPontos { get; set; }
+        public bool Ativo { get; set; }
 
         public List<Participante> DeterminarVencedores(List<Participante> participantes)
         {

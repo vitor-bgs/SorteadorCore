@@ -12,5 +12,17 @@ namespace SorteadorFolgados.Domain.Services
         {
             _salaRepository = salaRepository;
         }
+
+        public override void Update(Sala obj)
+        {
+            obj.Ativo = true;
+            base.Update(obj);
+        }
+
+        public override Sala Add(Sala obj)
+        {
+            obj.Ativo = true;
+            return base.Add(obj);
+        }
     }
 }
