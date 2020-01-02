@@ -21,6 +21,9 @@ using SorteadorFolgados.Application;
 using SorteadorFolgados.Application.Interfaces;
 using SorteadorFolgados.Hubs;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace SorteadorFolgados
 {
@@ -103,6 +106,35 @@ namespace SorteadorFolgados
                     services.AddTransient<IParticipanteAppService, ParticipanteAppService>();
                     services.AddMvc();
                     services.AddSignalR();
+
+                    services.Configure<CookiePolicyOptions>(options =>
+                    {
+                        options.CheckConsentNeeded = context => true;
+                        options.MinimumSameSitePolicy = SameSiteMode.None;
+                    });
+
+                    services.AddDefaultIdentity<ViewModel.UsuarioViewModel>();
+
+                    //services.Configure<IdentityOptions>(options =>
+                    //{
+                    //    options.
+                    //});
+
+                    services.ConfigureApplicationCookie(options =>
+                    {
+                        options.Cookie.HttpOnly = true;
+                        options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+                        options.LoginPath = "/Login/Index";
+                        options.AccessDeniedPath = "/Login/Index";
+                        options.SlidingExpiration = true;
+                    });
+                    services.AddAuthentication("TestScheme")
+                    .AddCookie("TestScheme", options =>
+                    {
+                        options.CookieHttpOnly = true;
+                        options.LoginPath = "/Login";
+                    });
                 })
                 .ConfigureLogging(loggingBuilder =>
                 {
@@ -175,6 +207,8 @@ namespace SorteadorFolgados
                     {
                         routes.MapHub<SorteioHub>("/sorteio");
                     });
+
+                    app.UseAuthentication();
                 })
                 .Build();
 

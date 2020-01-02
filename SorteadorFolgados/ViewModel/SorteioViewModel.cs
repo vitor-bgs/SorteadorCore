@@ -11,10 +11,9 @@ namespace SorteadorFolgados.ViewModel
     {
         [Key]
         public int SorteioId { get; set; }
-
         [DisplayName("Data de Início")]
         public DateTime DataInicio { get; set; }
-
+        public bool Ativo { get; set; }
         public virtual SalaViewModel Sala { get; set; }
         public virtual List<SorteioDetalheViewModel> Participacoes { get; set; }
         public virtual ParticipanteViewModel ParticipanteAtual { get; set; }
