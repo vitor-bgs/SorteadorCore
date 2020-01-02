@@ -10,6 +10,7 @@ using SorteadorFolgados.Domain.Entities;
 using SorteadorFolgados.ViewModel;
 using SorteadorFolgados.Hubs;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SorteadorFolgados.Controllers.api
 {
@@ -33,6 +34,7 @@ namespace SorteadorFolgados.Controllers.api
             _sorteioHubContext = sorteioHubContext;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public ActionResult<IEnumerable<SorteioViewModel>> Sorteios()
         {
@@ -48,6 +50,7 @@ namespace SorteadorFolgados.Controllers.api
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("{SorteioId}")]
         public ActionResult<SorteioViewModel> Sorteios(int SorteioId)
         {
@@ -64,6 +67,7 @@ namespace SorteadorFolgados.Controllers.api
 
         }
 
+        [Authorize]
         [HttpPost("iniciar-sorteio/{SalaId}")]
         public ActionResult IniciarSorteio(int SalaId)
         {
@@ -84,6 +88,7 @@ namespace SorteadorFolgados.Controllers.api
             }
         }
 
+        [Authorize]
         [HttpPut("encerrar-sorteio")]
         public ActionResult EncerrarSorteio()
         {
@@ -102,6 +107,7 @@ namespace SorteadorFolgados.Controllers.api
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("obter-vencedores-sorteios/{HaNsemanas}")]
         public ActionResult<List<SorteioViewModel>> ObterVencedoresSorteios(int HaNSemanas)
         {

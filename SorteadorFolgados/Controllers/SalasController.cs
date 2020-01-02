@@ -20,16 +20,13 @@ namespace SorteadorFolgados.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ISalaAppService _salaAppService;
-        private readonly SignInManager<UsuarioViewModel> _signInManager;
 
         public SalasController(
             IMapper mapper, 
-            ISalaAppService salaAppService,
-            SignInManager<UsuarioViewModel> signInManager)
+            ISalaAppService salaAppService)
         {
             _mapper = mapper;
             _salaAppService = salaAppService;
-            _signInManager = signInManager;
         }
 
         [Authorize]

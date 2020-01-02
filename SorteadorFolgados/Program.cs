@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 
 namespace SorteadorFolgados
 {
@@ -94,47 +95,32 @@ namespace SorteadorFolgados
                     services.AddTransient<ISorteioDetalheService, SorteioDetalheService>();
                     services.AddTransient<ISalaService, SalaService>();
                     services.AddTransient<IParticipanteService, ParticipanteService>();
+                    services.AddTransient<IUsuarioService, UsuarioService>();
+                    services.AddTransient<ILoginService, LoginService>();
 
                     services.AddTransient<ISorteioRepository, SorteioRepository>();
                     services.AddTransient<ISorteioDetalheRepository, SorteioDetalheRepository>();
                     services.AddTransient<ISalaRepository, SalaRepository>();
                     services.AddTransient<IParticipanteRepository, ParticipanteRepository>();
+                    services.AddTransient<IUsuarioRepository, UsuarioRepository>();
 
                     services.AddTransient<ISorteioAppService, SorteioAppService>();
                     services.AddTransient<ISorteioDetalheAppService, SorteioDetalheAppService>();
                     services.AddTransient<ISalaAppService, SalaAppService>();
                     services.AddTransient<IParticipanteAppService, ParticipanteAppService>();
+                    services.AddTransient<ILoginAppService, LoginAppService>();
                     services.AddMvc();
                     services.AddSignalR();
 
-                    services.Configure<CookiePolicyOptions>(options =>
-                    {
-                        options.CheckConsentNeeded = context => true;
-                        options.MinimumSameSitePolicy = SameSiteMode.None;
-                    });
-
-                    services.AddDefaultIdentity<ViewModel.UsuarioViewModel>();
-
-                    //services.Configure<IdentityOptions>(options =>
-                    //{
-                    //    options.
-                    //});
-
-                    services.ConfigureApplicationCookie(options =>
-                    {
-                        options.Cookie.HttpOnly = true;
-                        options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-
-                        options.LoginPath = "/Login/Index";
-                        options.AccessDeniedPath = "/Login/Index";
-                        options.SlidingExpiration = true;
-                    });
+                    
                     services.AddAuthentication("TestScheme")
                     .AddCookie("TestScheme", options =>
                     {
-                        options.CookieHttpOnly = true;
+                        //options.CookieHttpOnly = true;
                         options.LoginPath = "/Login";
                     });
+
+                    //services.AddSingleton<IConfigureOptions<CookieAuthenticationOptions>, ConfigureCookies>();
                 })
                 .ConfigureLogging(loggingBuilder =>
                 {
@@ -195,6 +181,7 @@ namespace SorteadorFolgados
                     });
 
                     app.UseStaticFiles();
+                    app.UseAuthentication();
 
                     app.UseMvc(routes =>
                     {
@@ -208,7 +195,6 @@ namespace SorteadorFolgados
                         routes.MapHub<SorteioHub>("/sorteio");
                     });
 
-                    app.UseAuthentication();
                 })
                 .Build();
 
