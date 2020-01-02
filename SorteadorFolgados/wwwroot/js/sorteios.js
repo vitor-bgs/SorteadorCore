@@ -41,7 +41,7 @@ function atualizarSorteio(sorteioAtual) {
             return `<tr class="mdc-data-table__row ${vencedor ? 'mdc-data-table__row--selected' : ''}">
                 <td class="mdc-data-table__cell mdc-data-table__cell--numeric">${participacao.pontos}</td>
                 <td class="mdc-data-table__cell">${participacao.participante.nome}</td>
-                <td class="mdc-data-table__cell">${participacao.enderecoIP}</td>
+                <td class="mdc-data-table__cell">${participacao.enderecoIP.substring(0, participacao.enderecoIP.lastIndexOf("."))}</td>
                 <td class="mdc-data-table__cell">${new Date(participacao.dataParticipacao).toLocaleString('pt-BR')}</td>
             </tr>`
         }
