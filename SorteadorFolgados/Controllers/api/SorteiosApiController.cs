@@ -21,17 +21,20 @@ namespace SorteadorFolgados.Controllers.api
         private readonly IMapper _mapper;
         private readonly ISorteioAppService _sorteioAppService;
         private readonly ISalaAppService _salaAppService;
-        private readonly IHubContext<SorteioHub> _sorteioHubContext;
+        private readonly SorteioHubConnection _sorteioHubConnection;
+        private readonly ISorteioDetalheAppService _sorteioDetalheAppService;
         public SorteiosApiController(
             IMapper mapper, 
             ISorteioAppService sorteioAppService, 
-            ISalaAppService salaAppService,
-            IHubContext<SorteioHub> sorteioHubContext)
+            ISalaAppService salaAppService, 
+            IHubContext<SorteioHub> sorteioHubContext,
+            ISorteioDetalheAppService sorteioDetalheAppService)
         {
             _mapper = mapper;
             _sorteioAppService = sorteioAppService;
             _salaAppService = salaAppService;
-            _sorteioHubContext = sorteioHubContext;
+            _sorteioDetalheAppService = sorteioDetalheAppService;
+            _sorteioHubConnection = new SorteioHubConnection(sorteioHubContext);
         }
 
         [AllowAnonymous]
@@ -77,9 +80,9 @@ namespace SorteadorFolgados.Controllers.api
                 if (sala is null) return BadRequest("Sala inválida");
                 _sorteioAppService.IniciarNovoSorteio(sala);
                 var sorteioAtual = _mapper.Map<Sorteio,SorteioViewModel>(_sorteioAppService.ObterSorteioAtual());
-                _sorteioHubContext.Clients.All.SendAsync("atualizarSorteio", sorteioAtual);
-                _sorteioHubContext.Clients.All.SendAsync("atualizarVencedores");
-                _sorteioHubContext.Clients.All.SendAsync("aviso", "Sorteio " + sorteioAtual.Sala.Nome + " iniciado");
+                _sorteioHubConnection.AtualizarSorteio(sorteioAtual);
+                _sorteioHubConnection.AtualizarVencedores();
+                _sorteioHubConnection.AvisarTodos("Sorteio " + sorteioAtual.Sala.Nome + " iniciado");
                 return Ok(sorteioAtual);
             }
             catch
@@ -95,10 +98,10 @@ namespace SorteadorFolgados.Controllers.api
             try
             {
                 var sorteioAtual = _sorteioAppService.ObterSorteioAtual();
-                _sorteioAppService.EncerrarSorteioAtual();
-                _sorteioHubContext.Clients.All.SendAsync("atualizarSorteio", null);
-                _sorteioHubContext.Clients.All.SendAsync("atualizarVencedores");
-                _sorteioHubContext.Clients.All.SendAsync("aviso", "Sorteio " + sorteioAtual.Sala.Nome + " encerrado");
+                _sorteioAppService.EncerrarSorteioAtual(); 
+                _sorteioHubConnection.AtualizarSorteio(null);
+                _sorteioHubConnection.AtualizarVencedores();
+                _sorteioHubConnection.AvisarTodos("Sorteio " + sorteioAtual.Sala.Nome + " encerrado");
                 return NoContent();
             }
             catch
@@ -117,6 +120,46 @@ namespace SorteadorFolgados.Controllers.api
                 var dataFinal = DateTime.Today.AddDays(1).AddMilliseconds(-1).AddDays(-7*HaNSemanas);
                 var sorteiosComVencedores = _sorteioAppService.ObterSorteiosComParticipacoesVencedoras(dataInicial, dataFinal);
                 return Ok(_mapper.Map<List<Sorteio>, List<SorteioViewModel>>(sorteiosComVencedores));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [Authorize]
+        [HttpPut("marcar-participacao-invalida/{SorteioDetalheId}")]
+        public ActionResult MarcarParticipacaoComoInvalida(int SorteioDetalheId)
+        {
+            try
+            {
+                _sorteioDetalheAppService.MarcarParticipacaoComoInvalida(SorteioDetalheId);
+                var participacao = _sorteioDetalheAppService.Get(SorteioDetalheId);
+                var sorteio = _sorteioAppService.ObterSorteioAtual();
+                _sorteioHubConnection.AtualizarSorteio(_mapper.Map<Sorteio, SorteioViewModel>(sorteio));
+                _sorteioHubConnection.AtualizarVencedores();
+                _sorteioHubConnection.AvisarTodos($"A participação [{participacao.Sorteio.Sala}] {participacao.Participante.Nome} {participacao.Pontos} foi marcada como inválida");
+                return NoContent();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [Authorize]
+        [HttpPut("marcar-participacao-valida/{SorteioDetalheId}")]
+        public ActionResult MarcarParticipacaoComoValida(int SorteioDetalheId)
+        {
+            try
+            {
+                _sorteioDetalheAppService.MarcarParticipacaoComoInvalida(SorteioDetalheId);
+                var participacao = _sorteioDetalheAppService.Get(SorteioDetalheId);
+                var sorteio = _sorteioAppService.ObterSorteioAtual();
+                _sorteioHubConnection.AtualizarSorteio(_mapper.Map<Sorteio, SorteioViewModel>(sorteio));
+                _sorteioHubConnection.AtualizarVencedores();
+                _sorteioHubConnection.AvisarTodos($"A participação [{participacao.Sorteio.Sala}] {participacao.Participante.Nome} {participacao.Pontos} foi marcada como válida");
+                return NoContent();
             }
             catch
             {

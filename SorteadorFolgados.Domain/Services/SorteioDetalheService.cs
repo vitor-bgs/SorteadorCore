@@ -38,5 +38,17 @@ namespace SorteadorFolgados.Domain.Services
         {
             return _sorteioDetalhesRepository.GetSorteioDetalhes(sorteioId);
         }
+
+        public void MarcarParticipacaoComoInvalida(SorteioDetalhe participacao)
+        {
+            participacao.ParticipacaoValida = false;
+            _sorteioDetalhesRepository.Update(participacao);
+        }
+
+        public void MarcarParticipacaoComoValida(SorteioDetalhe participacao)
+        {
+            participacao.ParticipacaoValida = true;
+            _sorteioDetalhesRepository.Update(participacao);
+        }
     }
 }
