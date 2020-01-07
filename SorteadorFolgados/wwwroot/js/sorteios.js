@@ -85,6 +85,10 @@ function atualizarVencedorSorteioAtual(nomeSala, nomeVencedor) {
 }
 
 function sortear(nomeParticipante) {
+    if (nomeParticipante.trim() == '') {
+        aviso("Nickname não pode estar vazio");
+        return;
+    }
     connection.invoke("Sortear", nomeParticipante).catch(function (err) { console.error(err); });
 }
 

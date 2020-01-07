@@ -54,6 +54,22 @@ namespace SorteadorFolgados.Controllers.api
         }
 
         [AllowAnonymous]
+        [HttpGet("sorteio-atual")]
+        public ActionResult<SorteioViewModel> SorteioAtual()
+        {
+            try
+            {
+                var sorteio = _sorteioAppService.ObterSorteioAtual();
+                if (sorteio is null) return NotFound();
+                return Ok(_mapper.Map<Sorteio, SorteioViewModel>(sorteio));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [AllowAnonymous]
         [HttpGet("{SorteioId}")]
         public ActionResult<SorteioViewModel> Sorteios(int SorteioId)
         {
