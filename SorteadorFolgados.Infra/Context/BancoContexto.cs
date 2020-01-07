@@ -14,6 +14,7 @@ namespace SorteadorFolgados.Infra.Context
         public DbSet<Sala> Salas { get; set; }
         public DbSet<Sorteio> Sorteios { get; set; }
         public DbSet<SorteioDetalhe> SorteioDetalhes { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -21,6 +22,7 @@ namespace SorteadorFolgados.Infra.Context
             builder.ApplyConfiguration<Sala>(new SalaConfiguration());
             builder.ApplyConfiguration<Sorteio>(new SorteioConfiguration());
             builder.ApplyConfiguration<SorteioDetalhe>(new SorteioDetalheConfiguration());
+            builder.ApplyConfiguration<Usuario>(new UsuarioConfiguration());
 
         }
     }

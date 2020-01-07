@@ -7,5 +7,7 @@ namespace SorteadorFolgados.Application.Interfaces
     {
         List<SorteioDetalhe> GetSorteioDetalhes(int sorteioId);
         void Sortear(string nomeParticipante, string EnderecoIP);
+        void MarcarParticipacaoComoValida(int sorteioDetalheId);
+        void MarcarParticipacaoComoInvalida(int sorteioDetalheId);
     }
 }

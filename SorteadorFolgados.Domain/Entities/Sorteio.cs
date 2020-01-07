@@ -22,8 +22,8 @@ namespace SorteadorFolgados.Domain.Entities
             {
                 return vencedores;
             }
-            vencedores.AddRange(this.Participacoes.OrderByDescending(p => p.Pontos).ToList().GetRange(0, this.Sala.QuantidadeVencedoresMaioresPontos));
-            vencedores.AddRange(this.Participacoes.OrderBy(p => p.Pontos).ToList().GetRange(0, this.Sala.QuantidadeVencedoresMenoresPontos));
+            vencedores.AddRange(this.Participacoes.Where(p => p.ParticipacaoValida).OrderByDescending(p => p.Pontos).ToList().GetRange(0, this.Sala.QuantidadeVencedoresMaioresPontos));
+            vencedores.AddRange(this.Participacoes.Where(p => p.ParticipacaoValida).OrderBy(p => p.Pontos).ToList().GetRange(0, this.Sala.QuantidadeVencedoresMenoresPontos));
             return vencedores;
         }
 

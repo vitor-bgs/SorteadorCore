@@ -16,6 +16,7 @@ namespace SorteadorFolgados.AutoMapper
             CreateMap<SorteioViewModel, Sorteio>();
             CreateMap<SorteioDetalheViewModel, SorteioDetalhe>();
             CreateMap<SalaViewModel, Sala>();
+            CreateMap<UsuarioViewModel, Usuario>();
         }
     }
 }

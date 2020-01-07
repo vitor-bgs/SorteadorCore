@@ -22,11 +22,25 @@ namespace SorteadorFolgados.Application
             return _sorteioDetalheService.GetSorteioDetalhes(sorteioId);
         }
 
+        public void MarcarParticipacaoComoInvalida(int sorteioDetalheId)
+        {
+            var participacao = _sorteioDetalheService.Get(sorteioDetalheId);
+            _sorteioDetalheService.MarcarParticipacaoComoInvalida(participacao);
+        }
+
+        public void MarcarParticipacaoComoValida(int sorteioDetalheId)
+        {
+            var participacao = _sorteioDetalheService.Get(sorteioDetalheId);
+            _sorteioDetalheService.MarcarParticipacaoComoValida(participacao);
+        }
+
         public void Sortear(string nomeParticipante, string EnderecoIP)
         {
             var participante = _participanteService.BuscaPorNome(nomeParticipante);
             var sorteioAtual = _sorteioService.ObterSorteioAtual();
             _sorteioDetalheService.Sortear(sorteioAtual, participante, EnderecoIP);
         }
+
+
     }
 }

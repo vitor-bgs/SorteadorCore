@@ -30,8 +30,8 @@ function atualizarSorteio(sorteioAtual) {
 
     $(`[id="vencedoresSemana0"] .mdc-chip--selected`).remove();
     $("table[id='Participacoes'] tbody").empty().append(
-        sorteioAtual.participacoes.map((participacao, i) => {
-            const indiceUltimoParticipante = sorteioAtual.participacoes.length - 1;
+        sorteioAtual.participacoes.filter((p) => p.participacaoValida).map((participacao, i) => {
+            const indiceUltimoParticipante = sorteioAtual.participacoes.filter((p)=> p.participacaoValida).length - 1;
             const vencedorMaioresPontos = (i < sorteioAtual.sala.quantidadeVencedoresMaioresPontos);
             const vencedorMenoresPontos = ((indiceUltimoParticipante - i) < sorteioAtual.sala.quantidadeVencedoresMenoresPontos);
             const vencedor = (vencedorMaioresPontos || vencedorMenoresPontos);
@@ -41,12 +41,25 @@ function atualizarSorteio(sorteioAtual) {
             return `<tr class="mdc-data-table__row ${vencedor ? 'mdc-data-table__row--selected' : ''}">
                 <td class="mdc-data-table__cell mdc-data-table__cell--numeric">${participacao.pontos}</td>
                 <td class="mdc-data-table__cell">${participacao.participante.nome}</td>
-                <td class="mdc-data-table__cell">${participacao.enderecoIP}</td>
+                <td class="mdc-data-table__cell">${participacao.enderecoIP.substring(0, participacao.enderecoIP.lastIndexOf("."))}</td>
                 <td class="mdc-data-table__cell">${new Date(participacao.dataParticipacao).toLocaleString('pt-BR')}</td>
+                ${userAuthenticated ? `<td class="mdc-data-table__cell"> <a href="#" onclick="marcarParticipacaoInvalida(${participacao.sorteioDetalheId})">Invalidar Participação</a></td>` : `` }
+                ${!userAuthenticated ? `<td class="mdc-data-table__cell">Válida</td>` : ``}
             </tr>`
-        }
+        })
+    )
+        .append(
+            sorteioAtual.participacoes.filter((p) => !p.participacaoValida).map((participacao, i) => {
+                return `<tr class="mdc-data-table__row mdc-data-table__row--disabled">
+                            <td class="mdc-data-table__cell mdc-data-table__cell--numeric">${participacao.pontos}</td>
+                            <td class="mdc-data-table__cell">${participacao.participante.nome}</td>
+                            <td class="mdc-data-table__cell">${participacao.enderecoIP.substring(0, participacao.enderecoIP.lastIndexOf("."))}</td>
+                            <td class="mdc-data-table__cell">${new Date(participacao.dataParticipacao).toLocaleString('pt-BR')}</td>
+                            ${userAuthenticated ? `<td class="mdc-data-table__cell"> <a href="#" onclick="marcarParticipacaoValida(${participacao.sorteioDetalheId})">Reverter Invalidação</a></td>` : `` }
+                            ${!userAuthenticated ? `<td class="mdc-data-table__cell">Inválida</td>` : ``}
+                        </tr>`
+            })
         )
-    );
 }
 
 function adicionarVencedor(idSemana, nomeSala, nomeVencedor) {
@@ -108,6 +121,34 @@ function obterVencedoresSemana(nSemana) {
                     adicionarVencedor('vencedoresSemana' + nSemana, sorteio.sala.nome, p.participante.nome)
                 })
             });
+        },
+        error: (err) => { console.error(err) }
+    })
+}
+
+function marcarParticipacaoInvalida(sorteioDetalheId) {
+    const url = '/api/sorteios/marcar-participacao-invalida/' + sorteioDetalheId;
+    $.ajax({
+        type: "PUT",
+        url: url,
+        data: {},
+        contentType: "application/json",
+        success: (res) => {
+            console.log("Participação " + sorteioDetalheId + " invalidada")
+        },
+        error: (err) => { console.error(err) }
+    })
+}
+
+function marcarParticipacaoValida(sorteioDetalheId) {
+    const url = '/api/sorteios/marcar-participacao-valida/' + sorteioDetalheId;
+    $.ajax({
+        type: "PUT",
+        url: url,
+        data: {},
+        contentType: "application/json",
+        success: (res) => {
+            console.log("Participação " + sorteioDetalheId + " marcada como válida")
         },
         error: (err) => { console.error(err) }
     })

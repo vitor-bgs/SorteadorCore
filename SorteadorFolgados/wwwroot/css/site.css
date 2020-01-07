@@ -36,3 +36,8 @@ textarea {
     display: none
   }
 }
+
+.mdc-data-table__row--disabled {
+    background-color: #e0e0e0;
+    color: #636363 !important;
+}
