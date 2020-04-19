@@ -48,7 +48,7 @@ namespace SorteadorFolgados.Controllers
                     ViewBag.Erro = "Usuário e / ou senha incorretos!";
                 }
             }
-            catch(Exception ex)
+            catch
             {
                 ViewBag.Erro = "Ocorreu um erro ao tentar efetuar o login";
             }
@@ -66,12 +66,12 @@ namespace SorteadorFolgados.Controllers
             var identidadeDeUsuario = new ClaimsIdentity(claims, "Cookies", "user", "role");
             ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identidadeDeUsuario);
 
-            var propriedadesDeAutenticacao = new AuthenticationProperties
-            {
-                AllowRefresh = true,
-                ExpiresUtc = DateTime.Now.ToLocalTime().AddHours(1),
-                IsPersistent = true
-            };
+            //var propriedadesDeAutenticacao = new AuthenticationProperties
+            //{
+            //    AllowRefresh = true,
+            //    ExpiresUtc = DateTime.Now.ToLocalTime().AddHours(1),
+            //    IsPersistent = true
+            //};
 
             await HttpContext.SignInAsync(claimsPrincipal);
         }

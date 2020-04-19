@@ -153,7 +153,9 @@ namespace SorteadorFolgados.Controllers.api
                 var participacao = _sorteioDetalheAppService.Get(SorteioDetalheId);
                 var sorteio = _sorteioAppService.ObterSorteioAtual();
                 await _sorteioHubConnection.AtualizarSorteio(_mapper.Map<Sorteio, SorteioViewModel>(sorteio));
+                await _sorteioHubConnection.AtualizarVencedores();
                 await _sorteioHubConnection.AvisarTodos($"A participação [{participacao.Sorteio.Sala.Nome}] {participacao.Participante.Nome} {participacao.Pontos} foi marcada como inválida");
+
                 return NoContent();
             }
             catch
@@ -172,6 +174,7 @@ namespace SorteadorFolgados.Controllers.api
                 var participacao = _sorteioDetalheAppService.Get(SorteioDetalheId);
                 var sorteio = _sorteioAppService.ObterSorteioAtual();
                 await _sorteioHubConnection.AtualizarSorteio(_mapper.Map<Sorteio, SorteioViewModel>(sorteio));
+                await _sorteioHubConnection.AtualizarVencedores();
                 await _sorteioHubConnection.AvisarTodos($"A participação [{participacao.Sorteio.Sala.Nome}] {participacao.Participante.Nome} {participacao.Pontos} foi marcada como válida");
                 return NoContent();
             }
