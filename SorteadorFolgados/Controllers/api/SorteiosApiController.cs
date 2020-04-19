@@ -54,6 +54,22 @@ namespace SorteadorFolgados.Controllers.api
         }
 
         [AllowAnonymous]
+        [HttpGet("sorteio-atual")]
+        public ActionResult<SorteioViewModel> SorteioAtual()
+        {
+            try
+            {
+                var sorteio = _sorteioAppService.ObterSorteioAtual();
+                if (sorteio is null) return NotFound();
+                return Ok(_mapper.Map<Sorteio, SorteioViewModel>(sorteio));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [AllowAnonymous]
         [HttpGet("{SorteioId}")]
         public ActionResult<SorteioViewModel> Sorteios(int SorteioId)
         {
@@ -138,7 +154,8 @@ namespace SorteadorFolgados.Controllers.api
                 var sorteio = _sorteioAppService.ObterSorteioAtual();
                 await _sorteioHubConnection.AtualizarSorteio(_mapper.Map<Sorteio, SorteioViewModel>(sorteio));
                 await _sorteioHubConnection.AtualizarVencedores();
-                await _sorteioHubConnection.AvisarTodos($"A participação [{participacao.Sorteio.Sala}] {participacao.Participante.Nome} {participacao.Pontos} foi marcada como inválida");
+                await _sorteioHubConnection.AvisarTodos($"A participação [{participacao.Sorteio.Sala.Nome}] {participacao.Participante.Nome} {participacao.Pontos} foi marcada como inválida");
+
                 return NoContent();
             }
             catch
@@ -153,12 +170,12 @@ namespace SorteadorFolgados.Controllers.api
         {
             try
             {
-                _sorteioDetalheAppService.MarcarParticipacaoComoInvalida(SorteioDetalheId);
+                _sorteioDetalheAppService.MarcarParticipacaoComoValida(SorteioDetalheId);
                 var participacao = _sorteioDetalheAppService.Get(SorteioDetalheId);
                 var sorteio = _sorteioAppService.ObterSorteioAtual();
                 await _sorteioHubConnection.AtualizarSorteio(_mapper.Map<Sorteio, SorteioViewModel>(sorteio));
                 await _sorteioHubConnection.AtualizarVencedores();
-                await _sorteioHubConnection.AvisarTodos($"A participação [{participacao.Sorteio.Sala}] {participacao.Participante.Nome} {participacao.Pontos} foi marcada como válida");
+                await _sorteioHubConnection.AvisarTodos($"A participação [{participacao.Sorteio.Sala.Nome}] {participacao.Participante.Nome} {participacao.Pontos} foi marcada como válida");
                 return NoContent();
             }
             catch

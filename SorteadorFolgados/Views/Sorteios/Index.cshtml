@@ -9,11 +9,11 @@
                     <br />
                     <button class="mdc-button" onclick="document.location.reload(true)"><span class="mdc-button__ripple"></span>Atualizar Resultados</button>
                 </div>
-                <div class="mdc-form-field mdc-form-field--align-end mdc-layout-grid__cell--span-6 mdc-layout-grid__cell--align-bottom">
+                <div class="mdc-form-field mdc-form-field--align-end mdc-layout-grid__cell--span-6 mdc-layout-grid__cell--align-bottom mdc-layout-grid--align-right">
                     <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
                         <input id="nomeParticipante" required maxlength="150" onkeyup="sortearClick(event)" class="mdc-text-field__input" />
                         <div class="mdc-line-ripple"></div>
-                        <label class="mdc-floating-label" for="nomeParticipante">Nome/Nickname</label>
+                        <label class="mdc-floating-label" for="nomeParticipante">Nickname</label>
                     </div>
                     <button class="mdc-button mdc-button--raised" onclick="sortearClick()">
                         <div class="mdc-button__ripple"></div>
@@ -30,6 +30,14 @@
                                 <th width="300px" class="mdc-data-table__header-cell" role="columnheader" scope="col">Nome</th>
                                 <th class="mdc-data-table__header-cell" role="columnheader" scope="col">IP</th>
                                 <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Data e Hora</th>
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Ação</th>
+                                }
+                                else
+                                {
+                                    <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Status da Participação</th>
+                                }
                             </tr>
                         </thead>
                         <tbody class="mdc-data-table__content">
@@ -81,5 +89,6 @@
 <script src="~/lib/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/sorteios.js"></script>
 <script>
+    var userAuthenticated = @User.Identity.IsAuthenticated.ToString().ToLower();
     obterVencedores();
 </script>
