@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.329
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30002.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SorteadorFolgados", "SorteadorFolgados\SorteadorFolgados.csproj", "{59C82059-9D44-4D25-8FD8-88A17AA03F12}"
 EndProject
@@ -17,7 +17,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SorteadorFolgados.Domain", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SorteadorFolgados.Infra", "SorteadorFolgados.Infra\SorteadorFolgados.Infra.csproj", "{95B6E364-86A7-465C-9D59-0CF2AE5C15CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SorteadorFolgados.Application", "SorteadorFolgados.Application\SorteadorFolgados.Application.csproj", "{F609B116-7FDB-4594-AA7C-A6E6B3BB5510}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SorteadorFolgados.Application", "SorteadorFolgados.Application\SorteadorFolgados.Application.csproj", "{F609B116-7FDB-4594-AA7C-A6E6B3BB5510}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F682F3CB-312E-4256-8822-8B1CBBBD0CE4}"
+	ProjectSection(SolutionItems) = preProject
+		kestrel-sorteador.service = kestrel-sorteador.service
+		nginx-config = nginx-config
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
