@@ -10,6 +10,7 @@ using SorteadorFolgados.Domain.Entities;
 using SorteadorFolgados.ViewModel;
 using SorteadorFolgados.Hubs;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SorteadorFolgados.Controllers.api
 {
@@ -20,19 +21,23 @@ namespace SorteadorFolgados.Controllers.api
         private readonly IMapper _mapper;
         private readonly ISorteioAppService _sorteioAppService;
         private readonly ISalaAppService _salaAppService;
-        private readonly IHubContext<SorteioHub> _sorteioHubContext;
+        private readonly SorteioHubConnection _sorteioHubConnection;
+        private readonly ISorteioDetalheAppService _sorteioDetalheAppService;
         public SorteiosApiController(
             IMapper mapper, 
             ISorteioAppService sorteioAppService, 
-            ISalaAppService salaAppService,
-            IHubContext<SorteioHub> sorteioHubContext)
+            ISalaAppService salaAppService, 
+            IHubContext<SorteioHub> sorteioHubContext,
+            ISorteioDetalheAppService sorteioDetalheAppService)
         {
             _mapper = mapper;
             _sorteioAppService = sorteioAppService;
             _salaAppService = salaAppService;
-            _sorteioHubContext = sorteioHubContext;
+            _sorteioDetalheAppService = sorteioDetalheAppService;
+            _sorteioHubConnection = new SorteioHubConnection(sorteioHubContext);
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public ActionResult<IEnumerable<SorteioViewModel>> Sorteios()
         {
@@ -48,6 +53,7 @@ namespace SorteadorFolgados.Controllers.api
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("{SorteioId}")]
         public ActionResult<SorteioViewModel> Sorteios(int SorteioId)
         {
@@ -64,8 +70,9 @@ namespace SorteadorFolgados.Controllers.api
 
         }
 
+        [Authorize]
         [HttpPost("iniciar-sorteio/{SalaId}")]
-        public ActionResult IniciarSorteio(int SalaId)
+        public async Task<ActionResult> IniciarSorteio(int SalaId)
         {
             try
             {
@@ -73,9 +80,9 @@ namespace SorteadorFolgados.Controllers.api
                 if (sala is null) return BadRequest("Sala inválida");
                 _sorteioAppService.IniciarNovoSorteio(sala);
                 var sorteioAtual = _mapper.Map<Sorteio,SorteioViewModel>(_sorteioAppService.ObterSorteioAtual());
-                _sorteioHubContext.Clients.All.SendAsync("atualizarSorteio", sorteioAtual);
-                _sorteioHubContext.Clients.All.SendAsync("atualizarVencedores");
-                _sorteioHubContext.Clients.All.SendAsync("aviso", "Sorteio " + sorteioAtual.Sala.Nome + " iniciado");
+                await _sorteioHubConnection.AtualizarSorteio(sorteioAtual);
+                await _sorteioHubConnection.AtualizarVencedores();
+                await _sorteioHubConnection.AvisarTodos("Sorteio " + sorteioAtual.Sala.Nome + " iniciado");
                 return Ok(sorteioAtual);
             }
             catch
@@ -84,16 +91,17 @@ namespace SorteadorFolgados.Controllers.api
             }
         }
 
+        [Authorize]
         [HttpPut("encerrar-sorteio")]
-        public ActionResult EncerrarSorteio()
+        public async Task<ActionResult> EncerrarSorteio()
         {
             try
             {
                 var sorteioAtual = _sorteioAppService.ObterSorteioAtual();
-                _sorteioAppService.EncerrarSorteioAtual();
-                _sorteioHubContext.Clients.All.SendAsync("atualizarSorteio", null);
-                _sorteioHubContext.Clients.All.SendAsync("atualizarVencedores");
-                _sorteioHubContext.Clients.All.SendAsync("aviso", "Sorteio " + sorteioAtual.Sala.Nome + " encerrado");
+                _sorteioAppService.EncerrarSorteioAtual(); 
+                await _sorteioHubConnection.AtualizarSorteio(null);
+                await _sorteioHubConnection.AtualizarVencedores();
+                await _sorteioHubConnection.AvisarTodos("Sorteio " + sorteioAtual.Sala.Nome + " encerrado");
                 return NoContent();
             }
             catch
@@ -102,6 +110,7 @@ namespace SorteadorFolgados.Controllers.api
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("obter-vencedores-sorteios/{HaNsemanas}")]
         public ActionResult<List<SorteioViewModel>> ObterVencedoresSorteios(int HaNSemanas)
         {
@@ -111,6 +120,44 @@ namespace SorteadorFolgados.Controllers.api
                 var dataFinal = DateTime.Today.AddDays(1).AddMilliseconds(-1).AddDays(-7*HaNSemanas);
                 var sorteiosComVencedores = _sorteioAppService.ObterSorteiosComParticipacoesVencedoras(dataInicial, dataFinal);
                 return Ok(_mapper.Map<List<Sorteio>, List<SorteioViewModel>>(sorteiosComVencedores));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [Authorize]
+        [HttpPut("marcar-participacao-invalida/{SorteioDetalheId}")]
+        public async Task<ActionResult> MarcarParticipacaoComoInvalida(int SorteioDetalheId)
+        {
+            try
+            {
+                _sorteioDetalheAppService.MarcarParticipacaoComoInvalida(SorteioDetalheId);
+                var participacao = _sorteioDetalheAppService.Get(SorteioDetalheId);
+                var sorteio = _sorteioAppService.ObterSorteioAtual();
+                await _sorteioHubConnection.AtualizarSorteio(_mapper.Map<Sorteio, SorteioViewModel>(sorteio));
+                await _sorteioHubConnection.AvisarTodos($"A participação [{participacao.Sorteio.Sala.Nome}] {participacao.Participante.Nome} {participacao.Pontos} foi marcada como inválida");
+                return NoContent();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [Authorize]
+        [HttpPut("marcar-participacao-valida/{SorteioDetalheId}")]
+        public async Task<ActionResult> MarcarParticipacaoComoValida(int SorteioDetalheId)
+        {
+            try
+            {
+                _sorteioDetalheAppService.MarcarParticipacaoComoValida(SorteioDetalheId);
+                var participacao = _sorteioDetalheAppService.Get(SorteioDetalheId);
+                var sorteio = _sorteioAppService.ObterSorteioAtual();
+                await _sorteioHubConnection.AtualizarSorteio(_mapper.Map<Sorteio, SorteioViewModel>(sorteio));
+                await _sorteioHubConnection.AvisarTodos($"A participação [{participacao.Sorteio.Sala.Nome}] {participacao.Participante.Nome} {participacao.Pontos} foi marcada como válida");
+                return NoContent();
             }
             catch
             {

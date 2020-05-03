@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SorteadorFolgados.Application.Interfaces;
@@ -29,6 +30,7 @@ namespace SorteadorFolgados.Controllers.api
             _sorteioAppService = sorteioAppService;
         }
 
+        [Authorize]
         [HttpGet]
         public ActionResult<IEnumerable<SalaViewModel>> Salas()
         {
@@ -46,6 +48,7 @@ namespace SorteadorFolgados.Controllers.api
                 );
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public ActionResult<SalaViewModel> Salas(int id)
         {
@@ -61,6 +64,7 @@ namespace SorteadorFolgados.Controllers.api
             }
         }
 
+        [Authorize]
         [HttpPost]
         public ActionResult<SalaViewModel> Create([FromBody] SalaViewModel sala)
         {
@@ -77,6 +81,7 @@ namespace SorteadorFolgados.Controllers.api
         }
 
 
+        [Authorize]
         [HttpPut("{id}")]
         public ActionResult Edit(int id, [FromBody] SalaViewModel sala)
         {
@@ -92,6 +97,7 @@ namespace SorteadorFolgados.Controllers.api
             }
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public ActionResult Delete(int id, [FromBody] SalaViewModel sala)
         {

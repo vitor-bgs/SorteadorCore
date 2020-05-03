@@ -17,7 +17,7 @@ namespace SorteadorFolgados.Infra.Repositories
             DbSet = Db.Set<TEntity>();
         }
 
-        public TEntity Add(TEntity obj)
+        public virtual TEntity Add(TEntity obj)
         {
             var obji = DbSet.Add(obj);
             Db.SaveChanges();
