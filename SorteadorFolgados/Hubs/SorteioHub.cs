@@ -39,6 +39,12 @@ namespace SorteadorFolgados.Hubs
         {
             try
             {
+                if(nomeParticipante.Trim() == string.Empty)
+                {
+                    await Avisar("Nickname não pode estar vazio");
+                    return;
+                }
+
                 Sorteio sorteioAtual = _sorteioAppService.ObterSorteioAtual();
                 if (sorteioAtual is null)
                 {

@@ -46,7 +46,9 @@ namespace SorteadorFolgados.Domain.Services
                 .Select(s => { 
                     s.Participacoes = s.ObterVencedores();
                     return s; 
-                }).ToList();
+                })
+                .OrderBy(s => s.DataEncerramento)
+                .ToList();
         }
 
     }

@@ -18,7 +18,7 @@ namespace SorteadorFolgados.Domain.Entities
         public List<SorteioDetalhe> ObterVencedores()
         {
             var vencedores = new List<SorteioDetalhe>();
-            if(this.Participacoes.Count == 0)
+            if(this.Participacoes.Count == 0 || this.Participacoes.Where(p => p.ParticipacaoValida).Count() == 0)
             {
                 return vencedores;
             }
