@@ -35,6 +35,7 @@ namespace SorteadorFolgados.Domain.Entities
             {
                 vencedores.AddRange(
                 this.Participacoes
+                .Where(p => p.ParticipacaoValida)
                 .OrderByDescending(p => p.Pontos)
                 .ToList()
                 .GetRange(0, quantidadeVencedoresMaioresPontos)
@@ -46,6 +47,7 @@ namespace SorteadorFolgados.Domain.Entities
             {
                 vencedores.AddRange(
                     this.Participacoes
+                    .Where(p => p.ParticipacaoValida)
                     .OrderBy(p => p.Pontos)
                     .ToList()
                     .GetRange(0, quantidadeVencedoresMenoresPontos));
