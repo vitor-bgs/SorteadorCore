@@ -1,12 +1,12 @@
 [Unit]
-Description=SorteadorFolgados .NET Core 2.1
+Description=SorteadorCore .NET Core 2.1
 
 [Service]
-WorkingDirectory=/home/dominiosorteio/SorteadorCore/SorteadorFolgados/bin/Release/netcoreapp2.1/publish
-ExecStart=/usr/bin/sudo /usr/bin/dotnet /home/dominiosorteio/SorteadorCore/SorteadorFolgados/bin/Release/netcoreapp2.1/publish/SorteadorFolgados.dll
+WorkingDirectory=/app
+ExecStart=/usr/bin/sudo /usr/bin/dotnet /app/SorteadorCore.Web.dll
 Restart=always
 RestartSec=10
-SyslogIdentifier=SorteadorFolgados
+SyslogIdentifier=SorteadorCore.Web
 
 [Install]
 WantedBy=multi-user.target

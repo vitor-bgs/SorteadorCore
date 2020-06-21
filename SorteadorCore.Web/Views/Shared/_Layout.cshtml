@@ -1,0 +1,72 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sorteador @Configuration["NomeGuild"] </title>
+
+    <environment names="Development">
+        <link rel="stylesheet" href="~/lib/material/dist/material-components-web.min.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/lib/material/dist/material-components-web.min.css" />
+    </environment>
+    <environment names="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/material/dist/material-components-web.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery">
+        </script>
+        <script src="~/lib/material/dist/material-components-web.min.js"></script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+</head>
+<body>
+    <div class="mdc-layout-grid">
+        <div class="mdc-layout-grid__inner">
+            <div class="mdc-layout-grid__cell--span-1"></div>
+            <div class="mdc-layout-grid__cell--span-9">
+                
+            </div>
+            <div class="mdc-layout-grid__cell--span-1">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a href="Login/Logout" class="mdc-button mdc-button--outlined">Logout</a>
+                }
+            </div>
+            <div class="mdc-layout-grid__cell--span-1"></div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p class="mdc-typography">&copy; 2019 - Vitor/BGS</p>
+        </footer>
+    </div>
+    <div class="mdc-snackbar" data-mdc-auto-init="MDCSnackbar">
+        <div class="mdc-snackbar__surface">
+            <div class="mdc-snackbar__label"
+                 role="status"
+                 aria-live="polite">
+                Erro
+            </div>
+            <div class="mdc-snackbar__actions">
+                <button type="button" class="mdc-button mdc-snackbar__action">Fechar</button>
+            </div>
+        </div>
+    </div>
+    @RenderSection("scripts", required: false)
+    <script>
+        window.mdc.autoInit();
+    </script>
+</body>
+</html>

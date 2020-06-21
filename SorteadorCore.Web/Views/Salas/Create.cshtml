@@ -1,0 +1,36 @@
+﻿@model SorteadorCore.Web.ViewModel.SalaViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mdc-typography--headline4">Criar Nova Sala</h2>
+<hr />
+<div class="mdc-layout-grid">
+    <div class="mdc-layout-grid__cell--span-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="mdc-theme--error"></div>
+            <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
+                <label asp-for="Nome" class="mdc-floating-label"></label>
+                <input id="nome" asp-for="Nome" class="mdc-text-field__input" />
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div><br />
+            <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
+                <label asp-for="QuantidadeVencedoresMaioresPontos" class="mdc-floating-label"></label>
+                <input id="quantidadeVencedoresMaioresPontos" asp-for="QuantidadeVencedoresMaioresPontos" class="mdc-text-field__input" value="1" />
+                <span asp-validation-for="QuantidadeVencedoresMaioresPontos" class="mdc-theme--error"></span>
+            </div><br />
+            <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
+                <label asp-for="QuantidadeVencedoresMenoresPontos" class="mdc-floating-label"></label>
+                <input id="quantidadeVencedoresMenoresPontos" asp-for="QuantidadeVencedoresMenoresPontos" class="mdc-text-field__input" value="0" />
+                <span asp-validation-for="QuantidadeVencedoresMenoresPontos" class="mdc-theme--error"></span>
+            </div><br />
+            <div class="mdc-form-field">
+                <button class="mdc-button mdc-button--raised" onclick="criarSalaClick()">Criar</button>
+            </div>
+        </form>
+    </div>
+</div>
+<a asp-action="Index" class="mdc-button">Voltar para a Lista</a>
+<script src="~/js/salas.js"></script>

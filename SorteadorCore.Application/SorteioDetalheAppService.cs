@@ -1,0 +1,46 @@
+﻿using SorteadorCore.Domain.Entities;
+using SorteadorCore.Application.Interfaces;
+using SorteadorCore.Domain.Interfaces.Services;
+using System.Collections.Generic;
+
+namespace SorteadorCore.Application
+{
+    public class SorteioDetalheAppService : AppServiceBase<SorteioDetalhe>, ISorteioDetalheAppService
+    {
+        private readonly ISorteioDetalheService _sorteioDetalheService;
+        private readonly ISorteioService _sorteioService;
+        private readonly IParticipanteService _participanteService;
+        public SorteioDetalheAppService(ISorteioDetalheService sorteioDetalheService, IParticipanteService participanteService, ISorteioService sorteioService) : base(sorteioDetalheService)
+        {
+            _sorteioDetalheService = sorteioDetalheService;
+            _sorteioService = sorteioService;
+            _participanteService = participanteService;
+        }
+
+        public List<SorteioDetalhe> GetSorteioDetalhes(int sorteioId)
+        {
+            return _sorteioDetalheService.GetSorteioDetalhes(sorteioId);
+        }
+
+        public void MarcarParticipacaoComoInvalida(int sorteioDetalheId)
+        {
+            var participacao = _sorteioDetalheService.Get(sorteioDetalheId);
+            _sorteioDetalheService.MarcarParticipacaoComoInvalida(participacao);
+        }
+
+        public void MarcarParticipacaoComoValida(int sorteioDetalheId)
+        {
+            var participacao = _sorteioDetalheService.Get(sorteioDetalheId);
+            _sorteioDetalheService.MarcarParticipacaoComoValida(participacao);
+        }
+
+        public void Sortear(string nomeParticipante, string EnderecoIP)
+        {
+            var participante = _participanteService.BuscaPorNome(nomeParticipante);
+            var sorteioAtual = _sorteioService.ObterSorteioAtual();
+            _sorteioDetalheService.Sortear(sorteioAtual, participante, EnderecoIP);
+        }
+
+
+    }
+}
